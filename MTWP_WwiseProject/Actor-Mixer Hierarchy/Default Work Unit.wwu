@@ -1,6 +1,119 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{B42CDECC-649D-4125-94ED-E4E66E6F69C0}" SchemaVersion="110">
 	<AudioObjects>
-		<WorkUnit Name="Default Work Unit" ID="{B42CDECC-649D-4125-94ED-E4E66E6F69C0}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{B42CDECC-649D-4125-94ED-E4E66E6F69C0}" PersistMode="Standalone">
+			<ChildrenList>
+				<SwitchContainer Name="HitSurfaceSwitch" ID="{B69E9495-2206-47C2-9B05-012505982E44}" ShortID="54994734">
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CBBAF723-F0CB-45C7-86B8-F797C092D8D2}"/>
+						</Reference>
+						<Reference Name="DefaultSwitchOrState">
+							<ObjectRef Name="Plastic" ID="{15032001-A763-4701-8C91-0E226BD71ECE}" WorkUnitID="{98D53746-7239-433B-899D-E6A22B5CD2F3}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{DBC99DF0-EB96-4776-B624-B573924C9329}"/>
+						</Reference>
+						<Reference Name="SwitchGroupOrStateGroup">
+							<ObjectRef Name="Surface" ID="{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}" WorkUnitID="{98D53746-7239-433B-899D-E6A22B5CD2F3}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="projectilehit_metal" ID="{DDD0B851-7C1A-4204-905F-7BE327EEB80A}" ShortID="659156045">
+							<PropertyList>
+								<Property Name="Lowpass" Type="int16">
+									<ValueList>
+										<Value>38</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>-30</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CBBAF723-F0CB-45C7-86B8-F797C092D8D2}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{DBC99DF0-EB96-4776-B624-B573924C9329}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="projectilehit_metal" ID="{19573B53-34E1-4B41-8CC9-E4B009D070FA}">
+									<Language>SFX</Language>
+									<AudioFile>projectilehit_metal.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="1064919212"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="projectilehit_metal" ID="{19573B53-34E1-4B41-8CC9-E4B009D070FA}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="projectilehit_plastic" ID="{ECE7A146-19BD-4603-9E3B-B4C024031B91}" ShortID="145626990">
+							<PropertyList>
+								<Property Name="Lowpass" Type="int16">
+									<ValueList>
+										<Value>64</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>-1240</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CBBAF723-F0CB-45C7-86B8-F797C092D8D2}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{DBC99DF0-EB96-4776-B624-B573924C9329}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<AudioFileSource Name="projectilehit_plastic" ID="{BE7B86C4-8082-4AF3-B3C5-4B1FDB4DE91F}">
+									<Language>SFX</Language>
+									<AudioFile>projectilehit_plastic.wav</AudioFile>
+									<MediaIDList>
+										<MediaID ID="816428177"/>
+									</MediaIDList>
+								</AudioFileSource>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="projectilehit_plastic" ID="{BE7B86C4-8082-4AF3-B3C5-4B1FDB4DE91F}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<GroupingInfo>
+						<GroupingBehaviorList>
+							<GroupingBehavior>
+								<ItemRef Name="projectilehit_plastic" ID="{ECE7A146-19BD-4603-9E3B-B4C024031B91}"/>
+							</GroupingBehavior>
+							<GroupingBehavior>
+								<ItemRef Name="projectilehit_metal" ID="{DDD0B851-7C1A-4204-905F-7BE327EEB80A}"/>
+							</GroupingBehavior>
+						</GroupingBehaviorList>
+						<GroupingList>
+							<Grouping>
+								<SwitchRef Name="Plastic" ID="{15032001-A763-4701-8C91-0E226BD71ECE}"/>
+								<ItemList>
+									<ItemRef Name="projectilehit_plastic" ID="{ECE7A146-19BD-4603-9E3B-B4C024031B91}"/>
+								</ItemList>
+							</Grouping>
+							<Grouping>
+								<SwitchRef Name="Metal" ID="{857A4BC8-E5F1-46AE-8E10-67AE5F7514C7}"/>
+								<ItemList>
+									<ItemRef Name="projectilehit_metal" ID="{DDD0B851-7C1A-4204-905F-7BE327EEB80A}"/>
+								</ItemList>
+							</Grouping>
+						</GroupingList>
+					</GroupingInfo>
+				</SwitchContainer>
+			</ChildrenList>
+		</WorkUnit>
 	</AudioObjects>
 </WwiseDocument>
