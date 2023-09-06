@@ -56,10 +56,13 @@ struct MTWP_API FMTWPAudioPlaybackParams
 	GENERATED_BODY()
 
 	UPROPERTY()
-	TObjectPtr<class UAkSwitchValue> SwitchValue;
+	float CooldownSeconds = 0;
+
+	UPROPERTY()
+	TObjectPtr<class UAkSwitchValue> SwitchValue = nullptr;
 	
 	UPROPERTY()
-	FString SwitchGroupName;
+	FString SwitchGroupName = "";
 	
 };
 
@@ -77,5 +80,5 @@ public:
 protected:
 
 	// For throttling needs
-	TMap<uint32_t, double> SoundEventTimings;
+	TMap<uint32_t, float> EventTimingsMap;
 };

@@ -3,6 +3,7 @@
 #include "MTWPProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
+#include "PhysicalMaterials/PhysicalMaterial.h" 
 
 #include "MTWPAudioSubsystem.h"
 
@@ -47,8 +48,20 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	{
 		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
 		{
-			AS->PlaySound(HitSoundEvent, FMTWPAudioCreationParams(Hit.ImpactPoint), FMTWPAudioPlaybackParams({ HitSwitchValue, HitSwitchGroupName }));
+			auto HitSwitchValue = HitSwitchValueDefault;
+			if (auto Material = Hit.Component->GetMaterial(0); IsValid(Material))
+			{
+				if (auto PhysMaterial = Material->GetPhysicalMaterial())
+				{
+					if (PhysMaterial->SurfaceType == EPhysicalSurface::SurfaceType1)
+					{
+						HitSwitchValue = HitSwitchValueMetal;
+					}
+				}
+			}
+			AS->PlaySound(HitSoundEvent, FMTWPAudioCreationParams(Hit.ImpactPoint), FMTWPAudioPlaybackParams({ HitSoundEventCooldownSeconds, HitSwitchValue, HitSwitchGroupName }));
 		}
 	}
 
+	
 }

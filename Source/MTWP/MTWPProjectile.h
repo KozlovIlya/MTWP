@@ -30,7 +30,13 @@ class AMTWPProjectile : public AActor
 	TObjectPtr<UAkAudioEvent> HitSoundEvent;
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAkSwitchValue> HitSwitchValue;
+	float HitSoundEventCooldownSeconds = .5f;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAkSwitchValue> HitSwitchValueDefault;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAkSwitchValue> HitSwitchValueMetal;
 
 	UPROPERTY(EditDefaultsOnly)
 	FString HitSwitchGroupName;

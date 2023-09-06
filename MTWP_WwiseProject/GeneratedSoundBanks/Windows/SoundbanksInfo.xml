@@ -9,7 +9,7 @@
 	</RootPaths>
 	<DialogueEvents/>
 	<SoundBanks>
-		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{118A373C-2739-D7C6-3434-930D05E68228}">
+		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{363909D8-0B30-4BBB-A516-F4D431398ADE}">
 			<ObjectPath>\SoundBanks\Default Work Unit\Default</ObjectPath>
 			<ShortName>Default</ShortName>
 			<Path>Default.bnk</Path>
@@ -24,7 +24,7 @@
 				</File>
 			</Media>
 			<Events>
-				<Event Id="2960666077" Name="Play_Hit" ObjectPath="\Events\Default Work Unit\Play_Hit" GUID="{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}" DurationType="OneShot" DurationMin="0.7631098" DurationMax="1.9485873">
+				<Event Id="2960666077" Name="Play_Hit" ObjectPath="\Events\Default Work Unit\Play_Hit" GUID="{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}" MaxAttenuation="100" DurationType="OneShot" DurationMin="0.7631098" DurationMax="1.9485873">
 					<SwitchContainers>
 						<SwitchContainer>
 							<SwitchValue GroupType="Switch" GroupId="1834394558" Id="660835419" GUID="{15032001-A763-4701-8C91-0E226BD71ECE}" Default="true"/>
@@ -73,5 +73,5 @@
 			</SwitchGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{A8B86887-C425-97D5-0964-C7E91882FAB4}</FileHash>
+	<FileHash>{B748C080-FA32-3DA3-7B53-666A7AF8197B}</FileHash>
 </SoundBanksInfo>

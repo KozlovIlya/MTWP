@@ -18,8 +18,19 @@ UAkComponent* UMTWPAudioSubsystem::PlaySound(UAkAudioEvent* InAudioEvent, const 
 
 
     auto Now = GetWorld()->GetTimeSeconds();
+    auto CurrentID = InAudioEvent->GetShortID();
 
-    
+    if (EventTimingsMap.Contains(CurrentID))
+    {
+        auto  a = EventTimingsMap[CurrentID];
+        auto Gap = FMath::Abs(Now - a);
+        if (Gap < InPlaybackParams.CooldownSeconds)
+        {    
+            return nullptr;
+        }
+    }
+
+    EventTimingsMap.Emplace(CurrentID, Now);
 
     UAkComponent* ResultAudioComponent = nullptr;
     bool bComponentCreated = true;
