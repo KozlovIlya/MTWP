@@ -4,6 +4,8 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 
+#include "MTWPAudioSubsystem.h"
+
 AMTWPProjectile::AMTWPProjectile() 
 {
 	// Use a sphere as a simple collision representation
@@ -40,4 +42,13 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 		Destroy();
 	}
+
+	if (auto GI = GetGameInstance(); IsValid(GI))
+	{
+		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
+		{
+			AS->PlaySound(HitSoundEvent, FMTWPAudioCreationParams(Hit.ImpactPoint), FMTWPAudioPlaybackParams({ HitSwitchValue, HitSwitchGroupName }));
+		}
+	}
+
 }

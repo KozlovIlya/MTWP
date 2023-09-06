@@ -4,6 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+
+#include <AkAudioEvent.h>
+#include <AkSwitchValue.h>
+
 #include "MTWPProjectile.generated.h"
 
 class USphereComponent;
@@ -21,6 +25,15 @@ class AMTWPProjectile : public AActor
 	/** Projectile movement component */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAkAudioEvent> HitSoundEvent;
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UAkSwitchValue> HitSwitchValue;
+
+	UPROPERTY(EditDefaultsOnly)
+	FString HitSwitchGroupName;
 
 public:
 	AMTWPProjectile();

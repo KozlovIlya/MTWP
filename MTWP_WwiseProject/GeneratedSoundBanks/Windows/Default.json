@@ -1,0 +1,101 @@
+{
+ "SoundBanksInfo": {
+  "Platform": "Windows",
+  "BasePlatform": "Windows",
+  "SchemaVersion": "16",
+  "SoundBankVersion": "145",
+  "SoundBanks": [
+   {
+    "Id": "782826392",
+    "Type": "User",
+    "GUID": "{C44318BD-AD38-4662-9D55-EBF8383578B9}",
+    "Language": "SFX",
+    "Hash": "{118A373C-2739-D7C6-3434-930D05E68228}",
+    "ObjectPath": "\\SoundBanks\\Default Work Unit\\Default",
+    "ShortName": "Default",
+    "Path": "Default.bnk",
+    "Media": [
+     {
+      "Id": "816428177",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "projectilehit_plastic.wav",
+      "CachePath": "SFX/projectilehit_plastic_10C4C929.wem"
+     },
+     {
+      "Id": "1064919212",
+      "Language": "SFX",
+      "Streaming": "false",
+      "Location": "Memory",
+      "ShortName": "projectilehit_metal.wav",
+      "CachePath": "SFX/projectilehit_metal_10C4C929.wem"
+     }
+    ],
+    "Events": [
+     {
+      "Id": "2960666077",
+      "Name": "Play_Hit",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Hit",
+      "GUID": "{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}",
+      "DurationType": "OneShot",
+      "DurationMin": "0.7631098",
+      "DurationMax": "1.9485873",
+      "SwitchContainers": [
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "1834394558",
+         "Id": "660835419",
+         "GUID": "{15032001-A763-4701-8C91-0E226BD71ECE}",
+         "Default": "true"
+        },
+        "MediaRefs": [
+         {
+          "Id": "816428177"
+         }
+        ]
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "1834394558",
+         "Id": "2473969246",
+         "GUID": "{857A4BC8-E5F1-46AE-8E10-67AE5F7514C7}"
+        },
+        "MediaRefs": [
+         {
+          "Id": "1064919212"
+         }
+        ]
+       }
+      ]
+     }
+    ],
+    "SwitchGroups": [
+     {
+      "Id": "1834394558",
+      "Name": "Surface",
+      "ObjectPath": "\\Switches\\Default Work Unit\\Surface",
+      "GUID": "{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}",
+      "Switches": [
+       {
+        "Id": "660835419",
+        "Name": "Plastic",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Surface\\Plastic",
+        "GUID": "{15032001-A763-4701-8C91-0E226BD71ECE}"
+       },
+       {
+        "Id": "2473969246",
+        "Name": "Metal",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Surface\\Metal",
+        "GUID": "{857A4BC8-E5F1-46AE-8E10-67AE5F7514C7}"
+       }
+      ]
+     }
+    ]
+   }
+  ],
+  "FileHash": "{C9C32BC0-3746-0D16-9835-836B6BAA9FD3}"
+ }
+}
