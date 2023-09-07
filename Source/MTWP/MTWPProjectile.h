@@ -8,6 +8,8 @@
 #include <AkAudioEvent.h>
 #include <AkSwitchValue.h>
 
+#include "MTWPAudioSubsystem.h"
+
 #include "MTWPProjectile.generated.h"
 
 class USphereComponent;
@@ -26,20 +28,29 @@ class AMTWPProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-	UPROPERTY(EditDefaultsOnly)
+
+// Audio
+public:
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
 	TObjectPtr<UAkAudioEvent> HitSoundEvent;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
 	float HitSoundEventCooldownSeconds = .5f;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
 	TObjectPtr<UAkSwitchValue> HitSwitchValueDefault;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
 	TObjectPtr<UAkSwitchValue> HitSwitchValueMetal;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
 	FString HitSwitchGroupName;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+	FMTWPRtpcDefenition HitPowerRtpc;
+
+
 
 public:
 	AMTWPProjectile();

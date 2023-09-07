@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="16" SoundBankVersion="145">
 	<SoundBanks>
-		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{363909D8-0B30-4BBB-A516-F4D431398ADE}">
+		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{835A42BB-085B-6D6D-8C7A-D4A837DBB82A}">
 			<ObjectPath>\SoundBanks\Default Work Unit\Default</ObjectPath>
 			<ShortName>Default</ShortName>
 			<Path>Default.bnk</Path>
@@ -33,6 +33,9 @@
 					</SwitchContainers>
 				</Event>
 			</Events>
+			<GameParameters>
+				<GameParameter Id="2726366691" Name="HitPower" ObjectPath="\Game Parameters\Default Work Unit\HitPower" GUID="{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"/>
+			</GameParameters>
 			<SwitchGroups>
 				<SwitchGroup Id="1834394558" Name="Surface" ObjectPath="\Switches\Default Work Unit\Surface" GUID="{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}">
 					<Switches>
@@ -43,5 +46,5 @@
 			</SwitchGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{2D4A006B-8E2B-0DF2-C6C7-5A1719D47DAA}</FileHash>
+	<FileHash>{2C169675-26C0-7AC2-F590-E076CA0A542F}</FileHash>
 </SoundBanksInfo>

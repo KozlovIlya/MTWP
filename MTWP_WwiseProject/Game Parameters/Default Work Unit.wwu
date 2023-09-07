@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <WwiseDocument Type="WorkUnit" ID="{08C23800-A6B4-4BE3-96E2-31CA5F3C68D6}" SchemaVersion="110">
 	<GameParameters>
-		<WorkUnit Name="Default Work Unit" ID="{08C23800-A6B4-4BE3-96E2-31CA5F3C68D6}" PersistMode="Standalone"/>
+		<WorkUnit Name="Default Work Unit" ID="{08C23800-A6B4-4BE3-96E2-31CA5F3C68D6}" PersistMode="Standalone">
+			<ChildrenList>
+				<GameParameter Name="HitPower" ID="{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"/>
+			</ChildrenList>
+		</WorkUnit>
 	</GameParameters>
 </WwiseDocument>

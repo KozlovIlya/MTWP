@@ -9,7 +9,7 @@
 	</RootPaths>
 	<DialogueEvents/>
 	<SoundBanks>
-		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{363909D8-0B30-4BBB-A516-F4D431398ADE}">
+		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{835A42BB-085B-6D6D-8C7A-D4A837DBB82A}">
 			<ObjectPath>\SoundBanks\Default Work Unit\Default</ObjectPath>
 			<ShortName>Default</ShortName>
 			<Path>Default.bnk</Path>
@@ -41,6 +41,9 @@
 					</SwitchContainers>
 				</Event>
 			</Events>
+			<GameParameters>
+				<GameParameter Id="2726366691" Name="HitPower" ObjectPath="\Game Parameters\Default Work Unit\HitPower" GUID="{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"/>
+			</GameParameters>
 			<SwitchGroups>
 				<SwitchGroup Id="1834394558" Name="Surface" ObjectPath="\Switches\Default Work Unit\Surface" GUID="{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}">
 					<Switches>
@@ -50,7 +53,7 @@
 				</SwitchGroup>
 			</SwitchGroups>
 		</SoundBank>
-		<SoundBank Id="1355168291" Type="User" GUID="{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}" Language="SFX" Hash="{986487A9-2683-E47A-8688-3D0FE6FDB954}">
+		<SoundBank Id="1355168291" Type="User" GUID="{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}" Language="SFX" Hash="{700AAB2E-F51A-0217-0BB4-EA77084DA034}">
 			<ObjectPath>Init</ObjectPath>
 			<ShortName>Init</ShortName>
 			<Path>Init.bnk</Path>
@@ -63,6 +66,9 @@
 			<Busses>
 				<Bus Id="3803692087" Name="Master Audio Bus" ObjectPath="\Master-Mixer Hierarchy\Default Work Unit\Master Audio Bus" GUID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}"/>
 			</Busses>
+			<GameParameters>
+				<GameParameter Id="2726366691" Name="HitPower" ObjectPath="\Game Parameters\Default Work Unit\HitPower" GUID="{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"/>
+			</GameParameters>
 			<SwitchGroups>
 				<SwitchGroup Id="1834394558" Name="Surface" ObjectPath="\Switches\Default Work Unit\Surface" GUID="{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}">
 					<Switches>
@@ -73,5 +79,5 @@
 			</SwitchGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{B748C080-FA32-3DA3-7B53-666A7AF8197B}</FileHash>
+	<FileHash>{DE024E74-6F45-28E7-655B-267E95E8E963}</FileHash>
 </SoundBanksInfo>

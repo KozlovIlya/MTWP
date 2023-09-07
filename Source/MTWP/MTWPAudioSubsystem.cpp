@@ -3,12 +3,14 @@
 #include <AkComponent.h>
 #include <AkAudioEvent.h>
 #include <AkGameplayStatics.h>
+#include <AKRtpc.h>
 
 UAkComponent* UMTWPAudioSubsystem::PlaySound(UAkAudioEvent* InAudioEvent, const FMTWPAudioCreationParams InCreationParams, FMTWPAudioPlaybackParams InPlaybackParams)
 {
     if (!GetWorld() || !IsValid(InAudioEvent))
     {
         return nullptr;
+
     }
 
     if (!GetWorld()->AllowAudioPlayback())
@@ -62,14 +64,30 @@ UAkComponent* UMTWPAudioSubsystem::PlaySound(UAkAudioEvent* InAudioEvent, const 
         return nullptr;
     }
 
+    // We basicaly declare that AudioComponent are killed when the
+    // when the playback is finished.
+    // It's better to keep an eye on every one :)
     ResultAudioComponent->SetAutoDestroy(true);
 
+    // Switch default
     if (InPlaybackParams.SwitchValue.IsResolved())
     {
         ResultAudioComponent->SetSwitch(InPlaybackParams.SwitchValue, InPlaybackParams.SwitchGroupName, "");
     }
 
+    // Rtpc default
+    for (auto& RtpcDefinition : InPlaybackParams.RtpcDefinitions)
+    {
+        if (RtpcDefinition.Rtpc)
+        {
+            auto CastedValue = RtpcDefinition.Value / RtpcDefinition.MaxGameValue * RtpcDefinition.DeclaredMaxSoundEngnValue;
+            ResultAudioComponent->SetRTPCValue(RtpcDefinition.Rtpc, CastedValue, RtpcDefinition.InterpolationSeconds, "");
+        }
+    }
+
     auto Result = ResultAudioComponent->PostAkEvent(InAudioEvent);
+
+    // TODO: result checking
 
     return ResultAudioComponent;
 }

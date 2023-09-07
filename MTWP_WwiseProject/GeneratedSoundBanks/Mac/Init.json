@@ -10,7 +10,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{F56A610C-C7C4-F874-B68B-7ADDF94EBB7A}",
+    "Hash": "{B47A8732-42FE-EA59-43C3-8AEC429CF992}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -42,6 +42,14 @@
       "GUID": "{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}"
      }
     ],
+    "GameParameters": [
+     {
+      "Id": "2726366691",
+      "Name": "HitPower",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\HitPower",
+      "GUID": "{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"
+     }
+    ],
     "SwitchGroups": [
      {
       "Id": "1834394558",
@@ -66,6 +74,6 @@
     ]
    }
   ],
-  "FileHash": "{ED5BD5B0-5692-2DD8-DB8B-097A6205EBD6}"
+  "FileHash": "{6947F3BC-E07B-CAFC-2981-399141026A43}"
  }
 }

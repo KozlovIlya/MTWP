@@ -5,8 +5,31 @@
 
 #include "MTWPAudioSubsystem.generated.h"
 
+
 class UAkComponent;
 class UAkAudioEvent;
+
+
+USTRUCT(BlueprintType, Blueprintable)
+struct MTWP_API FMTWPRtpcDefenition
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkRtpc> Rtpc;
+
+	UPROPERTY(EditDefaultsOnly)
+	float Value;
+
+	UPROPERTY(EditDefaultsOnly)
+	float InterpolationSeconds;
+
+	UPROPERTY(EditDefaultsOnly)
+	float MaxGameValue;
+
+	UPROPERTY(BlueprintReadOnly)
+	float DeclaredMaxSoundEngnValue = 100;
+};
 
 
 USTRUCT()
@@ -60,10 +83,12 @@ struct MTWP_API FMTWPAudioPlaybackParams
 
 	UPROPERTY()
 	TObjectPtr<class UAkSwitchValue> SwitchValue = nullptr;
-	
+
 	UPROPERTY()
 	FString SwitchGroupName = "";
-	
+
+	UPROPERTY()
+	TArray<FMTWPRtpcDefenition> RtpcDefinitions;
 };
 
 

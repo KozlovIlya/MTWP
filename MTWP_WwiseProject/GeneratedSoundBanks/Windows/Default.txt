@@ -8,6 +8,9 @@ Switch	ID	Name	Switch Group			Notes
 	660835419	Plastic	Surface			
 	2473969246	Metal	Surface			
 
+Game Parameter	ID	Name			Wwise Object Path	Notes
+	2726366691	HitPower			\Default Work Unit\HitPower	
+
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	816428177	projectilehit_plastic	C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\.cache\Windows\SFX\projectilehit_plastic_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\HitSurfaceSwitch\projectilehit_plastic		168036
 	1064919212	projectilehit_metal	C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\.cache\Windows\SFX\projectilehit_metal_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\HitSurfaceSwitch\projectilehit_metal		132396

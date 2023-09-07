@@ -3,7 +3,7 @@
 #include "MTWPProjectile.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
-#include "PhysicalMaterials/PhysicalMaterial.h" 
+#include "PhysicalMaterials/PhysicalMaterial.h"
 
 #include "MTWPAudioSubsystem.h"
 
@@ -40,8 +40,6 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 	if ((OtherActor != nullptr) && (OtherActor != this) && (OtherComp != nullptr) && OtherComp->IsSimulatingPhysics())
 	{
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
-
-		Destroy();
 	}
 
 	if (auto GI = GetGameInstance(); IsValid(GI))
@@ -59,8 +57,29 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 					}
 				}
 			}
-			AS->PlaySound(HitSoundEvent, FMTWPAudioCreationParams(Hit.ImpactPoint), FMTWPAudioPlaybackParams({ HitSoundEventCooldownSeconds, HitSwitchValue, HitSwitchGroupName }));
-		}
+			TArray<FMTWPRtpcDefenition> RtpcDefinitions;
+
+			if (IsValid(GetProjectileMovement()))
+			{
+				HitPowerRtpc.Value = GetVelocity().Size();
+				HitPowerRtpc.MaxGameValue = GetProjectileMovement()->GetMaxSpeed();
+				RtpcDefinitions.Add(HitPowerRtpc);
+
+					
+				AS->PlaySound(HitSoundEvent,
+					FMTWPAudioCreationParams(Hit.ImpactPoint),
+					FMTWPAudioPlaybackParams
+					(
+						{
+							HitSoundEventCooldownSeconds,
+							HitSwitchValue,
+							HitSwitchGroupName,
+							RtpcDefinitions
+						}
+					)
+				);
+			}
+		}	
 	}
 
 	

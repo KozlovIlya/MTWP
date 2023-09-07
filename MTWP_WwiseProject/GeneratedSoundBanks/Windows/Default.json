@@ -10,7 +10,7 @@
     "Type": "User",
     "GUID": "{C44318BD-AD38-4662-9D55-EBF8383578B9}",
     "Language": "SFX",
-    "Hash": "{363909D8-0B30-4BBB-A516-F4D431398ADE}",
+    "Hash": "{835A42BB-085B-6D6D-8C7A-D4A837DBB82A}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Default",
     "ShortName": "Default",
     "Path": "Default.bnk",
@@ -73,6 +73,14 @@
       ]
      }
     ],
+    "GameParameters": [
+     {
+      "Id": "2726366691",
+      "Name": "HitPower",
+      "ObjectPath": "\\Game Parameters\\Default Work Unit\\HitPower",
+      "GUID": "{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"
+     }
+    ],
     "SwitchGroups": [
      {
       "Id": "1834394558",
@@ -97,6 +105,6 @@
     ]
    }
   ],
-  "FileHash": "{AB8E7678-9F99-15AF-4BD2-CA58FECAB540}"
+  "FileHash": "{87DE6494-CB23-B6D1-70C4-941A27DFBCE5}"
  }
 }
