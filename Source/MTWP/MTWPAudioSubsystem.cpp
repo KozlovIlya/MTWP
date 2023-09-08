@@ -18,21 +18,23 @@ UAkComponent* UMTWPAudioSubsystem::PlaySound(UAkAudioEvent* InAudioEvent, const 
         return nullptr;
     }
 
-
-    auto Now = GetWorld()->GetTimeSeconds();
-    auto CurrentID = InAudioEvent->GetShortID();
-
-    if (EventTimingsMap.Contains(CurrentID))
+    if (!FMath::IsNearlyZero(InPlaybackParams.CooldownSeconds))
     {
-        auto  a = EventTimingsMap[CurrentID];
-        auto Gap = FMath::Abs(Now - a);
-        if (Gap < InPlaybackParams.CooldownSeconds)
-        {    
-            return nullptr;
-        }
-    }
+        auto Now = GetWorld()->GetTimeSeconds();
+        auto CurrentID = InAudioEvent->GetShortID();
 
-    EventTimingsMap.Emplace(CurrentID, Now);
+        if (EventTimingsMap.Contains(CurrentID))
+        {
+            auto  PrevTimings = EventTimingsMap[CurrentID];
+            auto Gap = FMath::Abs(Now - PrevTimings);
+            if (Gap < InPlaybackParams.CooldownSeconds)
+            {
+                return nullptr;
+            }
+        }
+
+        EventTimingsMap.Emplace(CurrentID, Now);
+    }
 
     UAkComponent* ResultAudioComponent = nullptr;
     bool bComponentCreated = true;
@@ -85,9 +87,10 @@ UAkComponent* UMTWPAudioSubsystem::PlaySound(UAkAudioEvent* InAudioEvent, const 
         }
     }
 
-    auto Result = ResultAudioComponent->PostAkEvent(InAudioEvent);
-
-    // TODO: result checking
+    if (auto Result = ResultAudioComponent->PostAkEvent(InAudioEvent); Result == AK_INVALID_PLAYING_ID)
+    {
+        return nullptr;
+    }
 
     return ResultAudioComponent;
 }

@@ -57,6 +57,7 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 					}
 				}
 			}
+
 			TArray<FMTWPRtpcDefenition> RtpcDefinitions;
 
 			if (IsValid(GetProjectileMovement()))
@@ -66,7 +67,7 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 				RtpcDefinitions.Add(HitPowerRtpc);
 
 					
-				AS->PlaySound(HitSoundEvent,
+				if (auto Component = AS->PlaySound(HitSoundEvent,
 					FMTWPAudioCreationParams(Hit.ImpactPoint),
 					FMTWPAudioPlaybackParams
 					(
@@ -77,7 +78,12 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 							RtpcDefinitions
 						}
 					)
-				);
+				))
+				{
+#ifdef WITH_EDITOR
+					DrawDebugSphere(GetWorld(), GetActorLocation(), HitPowerRtpc.Value / HitPowerRtpc.MaxGameValue * 50, 4, HitSwitchValue == HitSwitchValueMetal ? FColor::Red : FColor::Black, true, 2);
+#endif
+				}
 			}
 		}	
 	}

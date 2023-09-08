@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Mac" BasePlatform="Mac" SchemaVersion="16" SoundBankVersion="145">
 	<SoundBanks>
-		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{835A42BB-085B-6D6D-8C7A-D4A837DBB82A}">
+		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{A640DBA8-82EC-590C-EB2C-DFDB2BA02BB5}">
 			<ObjectPath>\SoundBanks\Default Work Unit\Default</ObjectPath>
 			<ShortName>Default</ShortName>
 			<Path>Default.bnk</Path>
@@ -16,7 +16,7 @@
 				</File>
 			</Media>
 			<Events>
-				<Event Id="2960666077" Name="Play_Hit" ObjectPath="\Events\Default Work Unit\Play_Hit" GUID="{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}" MaxAttenuation="100" DurationType="OneShot" DurationMin="0.7631098" DurationMax="1.9485873">
+				<Event Id="2960666077" Name="Play_Hit" ObjectPath="\Events\Default Work Unit\Play_Hit" GUID="{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}" MaxAttenuation="100" DurationType="Infinite">
 					<SwitchContainers>
 						<SwitchContainer>
 							<SwitchValue GroupType="Switch" GroupId="1834394558" Id="660835419" GUID="{15032001-A763-4701-8C91-0E226BD71ECE}" Default="true"/>
@@ -46,5 +46,5 @@
 			</SwitchGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{D4963EE8-E686-EADB-525A-5ECD70FEF34A}</FileHash>
+	<FileHash>{687624E1-9378-63C9-8839-F957FBF944B1}</FileHash>
 </SoundBanksInfo>

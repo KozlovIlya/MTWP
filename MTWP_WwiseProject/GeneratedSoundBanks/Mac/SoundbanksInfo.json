@@ -18,7 +18,7 @@
     "Type": "User",
     "GUID": "{C44318BD-AD38-4662-9D55-EBF8383578B9}",
     "Language": "SFX",
-    "Hash": "{835A42BB-085B-6D6D-8C7A-D4A837DBB82A}",
+    "Hash": "{A640DBA8-82EC-590C-EB2C-DFDB2BA02BB5}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Default",
     "ShortName": "Default",
     "Path": "Default.bnk",
@@ -47,9 +47,7 @@
       "ObjectPath": "\\Events\\Default Work Unit\\Play_Hit",
       "GUID": "{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}",
       "MaxAttenuation": "100",
-      "DurationType": "OneShot",
-      "DurationMin": "0.7631098",
-      "DurationMax": "1.9485873",
+      "DurationType": "Infinite",
       "SwitchContainers": [
        {
         "SwitchValue": {
@@ -117,7 +115,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{B47A8732-42FE-EA59-43C3-8AEC429CF992}",
+    "Hash": "{8532C273-6622-2C4B-F688-7E26005BEC33}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -181,6 +179,6 @@
     ]
    }
   ],
-  "FileHash": "{C01F0C98-B068-7237-A325-E4B3528F8336}"
+  "FileHash": "{893AB2A2-F58F-DB8A-E32A-9598F4F7BE92}"
  }
 }
