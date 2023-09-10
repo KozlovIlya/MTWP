@@ -90,7 +90,7 @@ UAkComponent* UMTWPAudioSubsystem::PlaySound(UAkAudioEvent* InAudioEvent, const 
     if (auto Result = ResultAudioComponent->PostAkEvent(InAudioEvent); Result == AK_INVALID_PLAYING_ID)
     {
         return nullptr;
-    }
 
+    }
     return ResultAudioComponent;
 }

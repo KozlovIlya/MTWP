@@ -4,10 +4,17 @@
 		<relationship name="projectSettings">
 			<destination>{1ddc0d1c-c9b3-4621-8ce0-dbc91e6e44dd}</destination>
 		</relationship>
+		<relationship name="changelist">
+			<destination>{56dd1c99-69d2-484d-9661-0977d24e342a}</destination>
+		</relationship>
 	</object>
 	<object class="ProjectSettings" id="{1ddc0d1c-c9b3-4621-8ce0-dbc91e6e44dd}">
+		<property name="windowLayout">
+			<value>AAAAAQAAABYAQQB1AGQAaQBvACAAQgBpAG4AIAAxAAAAQgHZ0MsAAwAAAAAC9wAAAH4AAASIAAADbgAAAvgAAACeAAAEhwAAA20AAAAAAAAAAAeAAAAC+AAAAJ4AAASHAAADbQ==</value>
+		</property>
 		<relationship name="activePlatform">
 			<destination>{cdfe12c4-47df-4270-9181-c9e442b7297b}</destination>
 		</relationship>
 	</object>
+	<object class="WorkspaceChangelist" id="{56dd1c99-69d2-484d-9661-0977d24e342a}" />
 </objects>
