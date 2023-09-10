@@ -6,39 +6,25 @@
 #include "MTWPAudioSubsystem.generated.h"
 
 
-class UAkComponent;
-class UAkAudioEvent;
-
-
 USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPRtpcDefenition
+struct MTWP_API FMTWPSwitchDefinition_Base
 {
 	GENERATED_BODY()
-
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<class UAkRtpc> Rtpc;
-
-	UPROPERTY(EditDefaultsOnly)
-	float Value;
-
-	UPROPERTY(EditDefaultsOnly)
-	float InterpolationSeconds;
-
-	UPROPERTY(EditDefaultsOnly)
-	float MaxGameValue;
-
-	UPROPERTY(BlueprintReadOnly)
-	float DeclaredMaxSoundEngnValue = 100;
 };
 
+USTRUCT(BlueprintType, Blueprintable)
+struct MTWP_API FMTWPRtpcDefenition_Base
+{
+	GENERATED_BODY()
+};
 
-USTRUCT()
+USTRUCT(BlueprintType, Blueprintable)
 struct MTWP_API FMTWPAudioCreationParams
 {
 	GENERATED_BODY()
 
 	// 2D, will be attached to player controller
-	inline FMTWPAudioCreationParams() : IsPlaying2D(true) 
+	inline FMTWPAudioCreationParams() : IsPlaying2D(true)
 	{}
 
 	// 3D Play on location
@@ -48,9 +34,9 @@ struct MTWP_API FMTWPAudioCreationParams
 
 	// 3D attach to component
 	inline FMTWPAudioCreationParams(USceneComponent* InSceneComponent,
-	const FName InAttachPointName = NAME_None,
-	const FRotator InRotation = FRotator(ForceInit),
-	const FVector InLocation = FVector(ForceInit)) :
+		const FName InAttachPointName = NAME_None,
+		const FRotator InRotation = FRotator(ForceInit),
+		const FVector InLocation = FVector(ForceInit)) :
 		SceneComponent(InSceneComponent),
 		AttachPointName(InAttachPointName),
 		Location(InLocation),
@@ -58,6 +44,7 @@ struct MTWP_API FMTWPAudioCreationParams
 	{}
 
 protected:
+
 	UPROPERTY()
 	TObjectPtr<USceneComponent> SceneComponent = nullptr;
 	UPROPERTY()
@@ -72,24 +59,82 @@ protected:
 	friend class UMTWPAudioSubsystem;
 };
 
-
-USTRUCT()
+USTRUCT(BlueprintType, Blueprintable)
 struct MTWP_API FMTWPAudioPlaybackParams
 {
 	GENERATED_BODY()
 
 	UPROPERTY()
 	float CooldownSeconds = 0;
-
-	UPROPERTY()
-	TObjectPtr<class UAkSwitchValue> SwitchValue = nullptr;
-
-	UPROPERTY()
-	FString SwitchGroupName = "";
-
-	UPROPERTY()
-	TArray<FMTWPRtpcDefenition> RtpcDefinitions;
 };
+
+UINTERFACE(BlueprintType , Blueprintable)
+class MTWP_API UFMTWPAudioStrategy : public UInterface
+{
+	GENERATED_BODY()
+};
+
+class MTWP_API IFMTWPAudioStrategy
+{
+	GENERATED_BODY()
+
+	using AudioComponent = USceneComponent;
+	using AudioEvent = UObject;
+	using SwitchDefenition = FMTWPSwitchDefinition_Base;
+	using RtpcDefenition = FMTWPRtpcDefenition_Base;
+
+
+	virtual USceneComponent* Play2D(UObject* InEvent) {}
+	virtual USceneComponent* PlayAttached(UObject* InEvent, USceneComponent* InAttachComponent, const FName& InAttachSocketName, const FTransform& Transform) {}
+	virtual USceneComponent* PlayAtLocation(UObject* InEvent, const FTransform& InTransform) {}
+	virtual void SetSwitch(USceneComponent* InAudioComponent, const FMTWPSwitchDefinition_Base& InRtpcDefinition) {}
+	virtual void SetRtpc(USceneComponent* InAudioComponent, const FMTWPRtpcDefenition_Base& InRtpcDefinition) {}
+};
+
+
+
+
+
+
+//USTRUCT(BlueprintType, Blueprintable)
+//struct MTWP_API FMTWPRtpcDefenition
+//{
+//	GENERATED_BODY()
+//
+//	UPROPERTY(EditDefaultsOnly)
+//	TObjectPtr<class UAkRtpc> Rtpc;
+//
+//	UPROPERTY(EditDefaultsOnly)
+//	float Value;
+//
+//	UPROPERTY(EditDefaultsOnly)
+//	float InterpolationSeconds;
+//
+//	UPROPERTY(EditDefaultsOnly)
+//	float MaxGameValue;
+//
+//	UPROPERTY(BlueprintReadOnly)
+//	float DeclaredMaxSoundEngnValue = 100;
+//};
+//
+//
+//USTRUCT()
+//struct MTWP_API FMTWPAudioPlaybackParams
+//{
+//	GENERATED_BODY()
+//
+//	UPROPERTY()
+//	float CooldownSeconds = 0;
+//
+//	UPROPERTY()
+//	TObjectPtr<class UAkSwitchValue> SwitchValue = nullptr;
+//
+//	UPROPERTY()
+//	FString SwitchGroupName = "";
+//
+//	UPROPERTY()
+//	TArray<FMTWPRtpcDefenition> RtpcDefinitions;
+//};
 
 
 UCLASS(Blueprintable, BlueprintType)
@@ -100,10 +145,12 @@ class MTWP_API UMTWPAudioSubsystem : public UGameInstanceSubsystem
 public:
 
 	UFUNCTION()
-	class UAkComponent* PlaySound(UAkAudioEvent* InAudioEvent, const FMTWPAudioCreationParams InCreationParams = FMTWPAudioCreationParams(), FMTWPAudioPlaybackParams InPlaybackParams = FMTWPAudioPlaybackParams());
+	template <typename API>
+	API::AudioComponent* PlaySound(API::AudioEvent* InAudioEvent, const FMTWPAudioCreationParams InCreationParams = FMTWPAudioCreationParams(), FMTWPAudioPlaybackParams InPlaybackParams = FMTWPAudioPlaybackParams(),
+		API::SwitchDefenition InSwitchDefenition = API::SwitchDefenition(), TArray<API::RtpcDefenition> RtpcDefenitions = TArray< API::RtpcDefenition>()) {}
 
-protected:
+//protected:
 
 	// For throttling needs
-	TMap<uint32_t, float> EventTimingsMap;
+	//TMap<uint32_t, float> EventTimingsMap;
 };
