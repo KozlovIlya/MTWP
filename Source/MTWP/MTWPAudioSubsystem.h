@@ -7,33 +7,23 @@
 
 
 USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPSwitchDefinition_Base
-{
-	GENERATED_BODY()
-};
-
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPRtpcDefenition_Base
-{
-	GENERATED_BODY()
-};
-
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPAudioCreationParams
+struct MTWP_API FMTWPAudioCreationParamsDefinition_Base
 {
 	GENERATED_BODY()
 
 	// 2D, will be attached to player controller
-	inline FMTWPAudioCreationParams() : IsPlaying2D(true)
+	inline FMTWPAudioCreationParams_Base(const bool InCrossLevel = false) :
+		Playing2D(true),
+		CrossLevel(InCrossLevel)
 	{}
 
 	// 3D Play on location
-	inline FMTWPAudioCreationParams(const FVector InLocation) :
+	inline FMTWPAudioCreationParams_Base(const FVector InLocation) :
 		Location(InLocation)
 	{}
 
 	// 3D attach to component
-	inline FMTWPAudioCreationParams(USceneComponent* InSceneComponent,
+	inline FMTWPAudioCreationParams_Base(USceneComponent* InSceneComponent,
 		const FName InAttachPointName = NAME_None,
 		const FRotator InRotation = FRotator(ForceInit),
 		const FVector InLocation = FVector(ForceInit)) :
@@ -42,6 +32,8 @@ struct MTWP_API FMTWPAudioCreationParams
 		Location(InLocation),
 		Rotation(InRotation)
 	{}
+
+	virtual bool IsValid() const { return true; }
 
 protected:
 
@@ -54,41 +46,64 @@ protected:
 	UPROPERTY()
 	FVector Location = FVector(ForceInit);
 
-	bool IsPlaying2D = false;
+	bool Playing2D = false;
+	bool CrossLevel = false;
+
 
 	friend class UMTWPAudioSubsystem;
 };
 
+
 USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPAudioPlaybackParams
+struct MTWP_API FMTWPAudioComponentDefinition_Base
 {
 	GENERATED_BODY()
 
-	UPROPERTY()
-	float CooldownSeconds = 0;
+	virtual bool IsValid() const { return true; }
+};
+
+USTRUCT(BlueprintType, Blueprintable)
+struct MTWP_API FMTWPAudioEventDefinition_Base
+{
+	GENERATED_BODY()
+
+	virtual bool IsValid() const { return true; }
+};
+
+USTRUCT(BlueprintType, Blueprintable)
+struct MTWP_API FMTWPAudioPlaybackParamsDefinition_Base
+{
+	GENERATED_BODY()
+
+	virtual bool IsValid() const { return true; }
 };
 
 UINTERFACE(BlueprintType , Blueprintable)
-class MTWP_API UFMTWPAudioStrategy : public UInterface
+class MTWP_API IFMTWPAudioSystem_Base : public UInterface
 {
 	GENERATED_BODY()
 };
 
-class MTWP_API IFMTWPAudioStrategy
+//UCLASS(BlueprintType, Blueprintable)
+class MTWP_API IFMTWPAudioSystem_Base
 {
 	GENERATED_BODY()
 
-	using AudioComponent = USceneComponent;
-	using AudioEvent = UObject;
-	using SwitchDefenition = FMTWPSwitchDefinition_Base;
-	using RtpcDefenition = FMTWPRtpcDefenition_Base;
+public:
+
+	// Must be declared same way
+	using AudioComponentDefinition = FMTWPAudioComponentDefinition_Base;
+	using AudioEventDefinition = FMTWPAudioEventDefinition_Base;
+	using AudioCreationParamsDefinition = FMTWPAudioCreationParamsDefinition_Base;
+	using AudioPlaybackParamsDefinition = FMTWPAudioPlaybackParamsDefinition_Base;
 
 
-	virtual USceneComponent* Play2D(UObject* InEvent) {}
-	virtual USceneComponent* PlayAttached(UObject* InEvent, USceneComponent* InAttachComponent, const FName& InAttachSocketName, const FTransform& Transform) {}
-	virtual USceneComponent* PlayAtLocation(UObject* InEvent, const FTransform& InTransform) {}
-	virtual void SetSwitch(USceneComponent* InAudioComponent, const FMTWPSwitchDefinition_Base& InRtpcDefinition) {}
-	virtual void SetRtpc(USceneComponent* InAudioComponent, const FMTWPRtpcDefenition_Base& InRtpcDefinition) {}
+	// Must be declared and implemented in inheritors the same way
+	bool IsPlaybackAllowed(UWorld* World) { return false; }
+	AudioComponentDefinition Play2D(AudioEventDefinition& InEventDifinition, AudioCreationParamsDefinition& InAudioCreationParamsDefinition = AudioCreationParamsDefinition(), AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioComponentDefinition(); }
+	AudioComponentDefinition PlayAttached(AudioEventDefinition& InEventDifinition, AudioCreationParamsDefinition& InAudioCreationParamsDefinition, AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioComponentDefinition(); }
+	AudioComponentDefinition PlayAtLocation(AudioEventDefinition& InEventDifinition, AudioCreationParamsDefinition& InAudioCreationParamsDefinition, AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioComponentDefinition(); }
+	void SetPlaybackParams(AudioComponentDefinition InAudioComponentDefinition, AudioPlaybackParamsDefinition InAudioPlaybackParamsDifinition) { }
 };
 
 
@@ -137,20 +152,31 @@ class MTWP_API IFMTWPAudioStrategy
 //};
 
 
-UCLASS(Blueprintable, BlueprintType)
+UCLASS(Blueprintable, BlueprintType) // Abstract?
 class MTWP_API UMTWPAudioSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
 public:
 
-	UFUNCTION()
-	template <typename API>
-	API::AudioComponent* PlaySound(API::AudioEvent* InAudioEvent, const FMTWPAudioCreationParams InCreationParams = FMTWPAudioCreationParams(), FMTWPAudioPlaybackParams InPlaybackParams = FMTWPAudioPlaybackParams(),
-		API::SwitchDefenition InSwitchDefenition = API::SwitchDefenition(), TArray<API::RtpcDefenition> RtpcDefenitions = TArray< API::RtpcDefenition>()) {}
+	// TODO: SCRUM-1: Separate concrete audio systems declaration
+	// TODO: SCRUM-2: Create newly created system containers and provide getter
+	UPROPERTY(BlueprintReadOnly)
+	TUniquePtr<class UMTWPAudioSystem_WWise> AudioSystem_WWise;
 
-//protected:
+	template <typename AudioSystem>
+	typename AudioSystem::AudioComponentDefinition* PlaySound(const typename AudioSystem::AudioEventDefinition& InAudioEventDefinition, const typename AudioSystem::AudioCreationParamsDefinition& InCreationParams = FMTWPAudioCreationParams(), const typename AudioSystem::SwitchDefenition& InSwitchDefenition = AudioSystem::SwitchDefenition(), const TArray<typename AudioSystem::RtpcDefenition>& RtpcDefenitions = TArray< AudioSystem::RtpcDefenition>());
 
-	// For throttling needs
-	//TMap<uint32_t, float> EventTimingsMap;
+	// TODO: SCRUM-2: Create newly created system containers and provide getter
+	//UPROPERTY(BlueprintReadonly)
+	//TMap<FName, TObjectPtr<IFMTWPAudioSystem_Base>> AudioSystemMap;
+
+protected:
+
+	template <typename AudioSystem>
+	AudioSystem* GetAudioSystem();
+
+	// TODO: SCRUM-2: Create newly created system containers and provide getter
+	//UPROPERTY(BlueprintReadonly)
+	//TArray<TObjectPtr<IFMTWPAudioSystem_Base>> ActiveAudioSystems;
 };
