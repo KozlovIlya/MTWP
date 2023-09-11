@@ -30,25 +30,25 @@ class AMTWPProjectile : public AActor
 
 
 // Audio
-public:
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	TObjectPtr<UAkAudioEvent> HitSoundEvent;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	float HitSoundEventCooldownSeconds = .5f;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	TObjectPtr<UAkSwitchValue> HitSwitchValueDefault;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	TObjectPtr<UAkSwitchValue> HitSwitchValueMetal;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FString HitSwitchGroupName;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FMTWPRtpcDefenition HitPowerRtpc;
+//public:
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	TObjectPtr<UAkAudioEvent> HitSoundEvent;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	float HitSoundEventCooldownSeconds = .5f;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	TObjectPtr<UAkSwitchValue> HitSwitchValueDefault;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	TObjectPtr<UAkSwitchValue> HitSwitchValueMetal;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FString HitSwitchGroupName;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPRtpcDefenition HitPowerRtpc;
 
 
 
