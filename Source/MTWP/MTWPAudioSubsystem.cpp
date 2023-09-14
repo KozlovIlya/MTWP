@@ -1,8 +1,10 @@
 #include "MTWPAudioSubsystem.h"
 
 
+#include "MTWPAudioStrategy_WWise.h"
+
 template<typename AudioSystem>
-typename AudioSystem::AudioInstanceDefinition UMTWPAudioSubsystem::PlaySound(const typename AudioSystem::AudioEventDefinition& InAudioEventDefinition, const typename AudioSystem::AudioCreationParamsDefinition& InCreationParams, const typename AudioSystem::SwitchDefenition& InSwitchDefenition, const TArray<typename AudioSystem::RtpcDefenition>& RtpcDefenitions)
+typename AudioSystem::AudioInstanceDefinition UMTWPAudioSubsystem::PlaySound(const typename AudioSystem::AudioEventDefinition& InAudioEventDefinition, const typename AudioSystem::AudioCreationParamsDefinition& InCreationParams, const typename AudioSystem::AudioPlaybackParamsDefinition)
 {
 	if (!!!GetWorld())
 	{
@@ -50,17 +52,14 @@ typename AudioSystem::AudioInstanceDefinition UMTWPAudioSubsystem::PlaySound(con
 	return AudioInstanceDefinition;
 }
 
-
-template<typename AudioSystem>
+template <typename AudioSystem>
 AudioSystem* UMTWPAudioSubsystem::GetAudioSystem()
 {
-	// TODO: SCRUM-2: Create newly created system containers and provide getter
-	// // TEMP 1:
-	if (AudioSystem_WWise.IsValid())
+	if (auto IdxPtr = ActiveAudioSystemMap.Find(AudioSystem::StaticClass()); IdxPtr)
 	{
-		return AudioSystem_WWise;
+		return Cast<AudioSystem>(ActiveAudioSystems[*IdxPtr].Get());
 	}
-	AudioSystem_WWise = MakeUnique<UMTWPAudioSystem_WWise>();
-	return AudioSystem_WWise.Get();
-	// // END_TEMP 1;
+
+	ActiveAudioSystemMap.Enque(AudioSystem::StaticClass()::GetName(), TActiveAudioSystems.Add(MakeUnique<AudioSystem>()));
+	return Cast<AudioSystem>(ActiveAudioSystemMap[TActiveAudioSystems.GetLength() - 1].Get());
 }
