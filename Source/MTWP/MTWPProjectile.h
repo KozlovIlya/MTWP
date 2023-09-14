@@ -8,7 +8,7 @@
 #include <AkAudioEvent.h>
 #include <AkSwitchValue.h>
 
-#include "MTWPAudioSubsystem.h"
+#include "MTWPAudioStrategy_WWise.h"
 
 #include "MTWPProjectile.generated.h"
 
@@ -29,27 +29,20 @@ class AMTWPProjectile : public AActor
 	UProjectileMovementComponent* ProjectileMovement;
 
 
-// Audio
-//public:
-//
-//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-//	TObjectPtr<UAkAudioEvent> HitSoundEvent;
-//
-//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-//	float HitSoundEventCooldownSeconds = .5f;
-//
-//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-//	TObjectPtr<UAkSwitchValue> HitSwitchValueDefault;
-//
-//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-//	TObjectPtr<UAkSwitchValue> HitSwitchValueMetal;
-//
-//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-//	FString HitSwitchGroupName;
-//
-//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-//	FMTWPRtpcDefenition HitPowerRtpc;
+ // Audio
+public:
 
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+	FMTWPAudioEventDefinition_WWise AudioEventDefinition;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+	FMTWPAudioPlaybackParamsDefinition_WWise AudioPlaybackParamsDefinition;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+	FMTWPRtpcDefinition_WWise HitSwitchDefinitionDefault;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+	FMTWPRtpcDefinition_WWise HitSwitchDefinitionMetal;
 
 
 public:

@@ -21,9 +21,10 @@ struct MTWP_API FMTWPAudioInstanceDefinition_WWise : public FMTWPAudioInstanceDe
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UAkComponent> Component = nullptr;
 
+
+	// TODO: SCRUM-XXX: Should be AK_INVALID_PLAYING_ID after Component stops.
 	UPROPERTY(EditDefaultsOnly)
 	uint32 PlayingID = AK_INVALID_PLAYING_ID;
-
 };
 
 
@@ -80,11 +81,13 @@ struct MTWP_API FMTWPAudioPlaybackParamsDefinition_WWise : public FMTWPAudioPlay
 
 	UPROPERTY(EditAnywhere)
 	FMTWPRtpcDefinition_WWise RtpcDefinition;
+
+	virtual bool IsValid() const override { return true; }
 };
 
 
-UCLASS(Blueprintable, BlueprintType)
-class MTWP_API UMTWPAudioSystem_WWise : public UObject, protected IFMTWPAudioStrategy
+UCLASS(Blueprintable, BlueprintType)                 // protected
+class MTWP_API UMTWPAudioSystem_WWise : public UObject, public IFMTWPAudioSystem_Base
 {
 	GENERATED_BODY()
 
@@ -94,9 +97,9 @@ public:
 	using AudioCreationParamsDefinition = FMTWPAudioCreationParamsDefinition_WWise;
 	using AudioPlaybackParamsDefinition = FMTWPAudioPlaybackParamsDefinition_WWise;
 
-	bool IsPlaybackAllowed(UWorld* World) { return false; }
-	AudioInstanceDefinition Play2D(AudioEventDefinition& InEventDifinition, AudioCreationParamsDefinition& InAudioCreationParamsDefinition = AudioCreationParamsDefinition(), AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	AudioInstanceDefinition PlayAttached(AudioEventDefinition& InEventDifinition, AudioCreationParamsDefinition& InAudioCreationParamsDefinition, AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	AudioInstanceDefinition PlayAtLocation(AudioEventDefinition& InEventDifinition, AudioCreationParamsDefinition& InAudioCreationParamsDefinition, AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	void SetPlaybackParams(AudioInstanceDefinition* InAudioInstanceDefinition, AudioPlaybackParamsDefinition InAudioPlaybackParamsDifinition) { }
+	bool IsPlaybackAllowed() { return false; }
+	AudioInstanceDefinition Play2D(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition = AudioCreationParamsDefinition(), const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
+	AudioInstanceDefinition PlayAttached(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
+	AudioInstanceDefinition PlayAtLocation(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
+	void SetPlaybackParams(AudioInstanceDefinition InAudioInstanceDefinition, const AudioPlaybackParamsDefinition InAudioPlaybackParamsDifinition) { }
 };
