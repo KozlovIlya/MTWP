@@ -31,22 +31,23 @@ typename AudioSystem::AudioInstanceDefinition UMTWPAudioSubsystem::PlaySound(con
 		{
 			return nullptr;
 		}
-		ResultAudioInstance = AS->Play2D(InEventDifinition, InAudioCreationParamsDefinition, InAudioPlaybackParamsDefinition);
+		ResultAudioInstance = AS->Create2D(InEventDifinition, InAudioCreationParamsDefinition, InAudioPlaybackParamsDefinition);
 	}
 	// Attached
 	else if (IsValid(InCreationParams.SceneComponent))
 	{
-		ResultAudioInstance = AS->PlayAttached(InEventDifinition, InAudioCreationParamsDefinition, InAudioPlaybackParamsDefinition);
+		ResultAudioInstance = AS->CreateAttached(InEventDifinition, InAudioCreationParamsDefinition, InAudioPlaybackParamsDefinition);
 	}
 	// At location
 	else
 	{
-		ResultAudioInstance = AS->PlayAtLocation(InEventDifinition, InAudioCreationParamsDefinition, InAudioPlaybackParamsDefinition);
+		ResultAudioInstance = AS->CreateAtLocation(InEventDifinition, InAudioCreationParamsDefinition, InAudioPlaybackParamsDefinition);
 	}
 
 	if (ResultAudioInstance.IsValid())
 	{
 		AS->SetPlaybackParams(ResultAudioInstance, InAudioPlaybackParamsDifinition);
+		AudioSystem.Play(ResultAudioInstance, InAudioEventDefinition);
 	}
 
 	return AudioInstanceDefinition;
