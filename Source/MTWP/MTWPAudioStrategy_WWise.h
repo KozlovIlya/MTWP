@@ -2,11 +2,6 @@
 
 #include "CoreMinimal.h"
 
-#include <AkComponent.h>
-#include <AkAudioEvent.h>
-#include <AkSwitchValue.h>
-#include <AkRtpc.h>
-
 #include "MTWPAudioSubsystem.h"
 
 #include "MTWPAudioStrategy_WWise.generated.h"
@@ -19,12 +14,19 @@ struct MTWP_API FMTWPAudioInstanceDefinition_WWise : public FMTWPAudioInstanceDe
 
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAkComponent> Component = nullptr;
+	TObjectPtr<class UAkComponent> Component = nullptr;
 
+	UPROPERTY(BlueprintReadOnly)
+	int PlayingID = 0U;
 
-	// TODO: SCRUM-XXX: Should be AK_INVALID_PLAYING_ID after Component stops.
-	UPROPERTY(EditDefaultsOnly)
-	uint32 PlayingID = AK_INVALID_PLAYING_ID;
+	UPROPERTY(BlueprintReadOnly)
+	int EventID = 0U;
+
+	virtual bool IsValid() const override;
+
+	//virtual void Play();
+
+	friend UMTWPAudioSystem_WWise;
 };
 
 
@@ -34,7 +36,9 @@ struct MTWP_API FMTWPAudioEventDefinition_WWise : public FMTWPAudioEventDefiniti
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAkAudioEvent> Event = nullptr;
+	TObjectPtr<class UAkAudioEvent> Event;
+
+	virtual bool IsValid() const override;
 };
 
 
@@ -42,6 +46,8 @@ USTRUCT(BlueprintType, Blueprintable)
 struct MTWP_API FMTWPAudioCreationParamsDefinition_WWise : public FMTWPAudioCreationParamsDefinition_Base
 {
 	GENERATED_BODY()
+
+	friend UMTWPAudioSystem_WWise;
 };
 
 
@@ -51,10 +57,14 @@ struct MTWP_API FMTWPSwitchDefinition_Wwise
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere)
-	TObjectPtr<UAkSwitchValue> Switch = nullptr;
+	TObjectPtr<class UAkSwitchValue> Switch = nullptr;
 
 	UPROPERTY(EditDefaultsOnly)
-	FString SwtitchGroup = "";
+	FString SwitchGroup = "";
+
+	bool IsValid() const;
+
+	friend UMTWPAudioSystem_WWise;
 };
 
 
@@ -64,10 +74,17 @@ struct MTWP_API FMTWPRtpcDefinition_WWise
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAkRtpc> Rtpc = nullptr;
+	TObjectPtr<class UAkRtpc> Rtpc = nullptr;
 
 	UPROPERTY(EditAnywhere)
 	float Value = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	uint32 InterpolationTimeMs = 0;
+
+	bool IsValid() const;
+
+	friend UMTWPAudioSystem_WWise;
 };
 
 
@@ -82,10 +99,12 @@ struct MTWP_API FMTWPAudioPlaybackParamsDefinition_WWise : public FMTWPAudioPlay
 	UPROPERTY(EditAnywhere)
 	FMTWPRtpcDefinition_WWise RtpcDefinition;
 
-	virtual bool IsValid() const override { return true; }
+	virtual bool IsValid() const override;
+
+	friend UMTWPAudioSystem_WWise;
 };
 
-
+													 // TODO:
 UCLASS(Blueprintable, BlueprintType)                 // protected
 class MTWP_API UMTWPAudioSystem_WWise : public UObject, public IFMTWPAudioSystem_Base
 {
@@ -97,9 +116,11 @@ public:
 	using AudioCreationParamsDefinition = FMTWPAudioCreationParamsDefinition_WWise;
 	using AudioPlaybackParamsDefinition = FMTWPAudioPlaybackParamsDefinition_WWise;
 
-	bool IsPlaybackAllowed() { return false; }
-	AudioInstanceDefinition Play2D(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition = AudioCreationParamsDefinition(), const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	AudioInstanceDefinition PlayAttached(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	AudioInstanceDefinition PlayAtLocation(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	void SetPlaybackParams(AudioInstanceDefinition InAudioInstanceDefinition, const AudioPlaybackParamsDefinition InAudioPlaybackParamsDifinition) { }
+	bool IsPlaybackAllowed() const;
+	void SetPlaybackParams(AudioInstanceDefinition InAudioInstanceDefinition, const AudioPlaybackParamsDefinition InAudioPlaybackParamsDifinition);
+
+protected:
+	AudioInstanceDefinition CreateAudioInstance2D(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition = AudioCreationParamsDefinition(), const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition());
+	AudioInstanceDefinition CreateAudioInstanceAttached(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition());
+	AudioInstanceDefinition CreateAudioInstanceAtLocation(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition());
 };

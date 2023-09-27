@@ -82,8 +82,8 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 //#ifdef WITH_EDITOR
 //					DrawDebugSphere(GetWorld(), GetActorLocation(), HitPowerRtpc.Value / HitPowerRtpc.MaxGameValue * 50, 4, HitSwitchValue == HitSwitchValueMetal ? FColor::Red : FColor::Black, true, 2);
 //#endif
-//				}
-//			}
-//		}	
-//	}
+				//}
+			//}
+		}	
+	}
 }
