@@ -3,215 +3,164 @@
 #include <CoreMinimal.h>
 #include <Subsystems/GameInstanceSubsystem.h>
 
+#include <AkComponent.h>
+#include <AkAudioEvent.h>
+#include <AkSwitchValue.h>
+#include <AkRtpc.h>
+#include <AkGameplayStatics.h>
+
 #include "MTWPAudioSubsystem.generated.h"
 
 
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPAudioCreationParamsDefinition_Base
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPAudioInstance : public UObject
 {
 	GENERATED_BODY()
-
-		// 2D, will be attached to player controller
-		inline FMTWPAudioCreationParamsDefinition_Base(const bool InCrossLevel = false) :
-		Playing2D(true),
-		CrossLevel(InCrossLevel)
-	{}
-
-	// 3D Play on location
-	inline FMTWPAudioCreationParamsDefinition_Base(const FVector InLocation) :
-		Location(InLocation)
-	{}
-
-	// 3D attach to component
-	inline FMTWPAudioCreationParamsDefinition_Base(USceneComponent* InSceneComponent,
-		const FName InAttachPointName = NAME_None,
-		const FRotator InRotation = FRotator(ForceInit),
-		const FVector InLocation = FVector(ForceInit),
-		const EAttachLocation::Type InAttachLocation = EAttachLocation::KeepRelativeOffset) :
-		SceneComponent(InSceneComponent),
-		AttachPointName(InAttachPointName),
-		Location(InLocation),
-		Rotation(InRotation),
-		AttachLocation(InAttachLocation)
-	{}
-
-	//void Play();
-
-	virtual bool IsValid() const { return true; }
 
 protected:
 
-	UPROPERTY()
-		UObject* ContextObject;
-	UPROPERTY()
-		TObjectPtr<USceneComponent> SceneComponent = nullptr;
-	UPROPERTY()
-		FName AttachPointName = NAME_None;
-	UPROPERTY()
-		FRotator Rotation = FRotator(ForceInit);
-	UPROPERTY()
-		FVector Location = FVector(ForceInit);
-	UPROPERTY()
-		TEnumAsByte<EAttachLocation::Type> AttachLocation;
+	UPROPERTY(BlueprintReadOnly, Category = "PlaybackParameters")
+	TObjectPtr<UMTWPPlaybackContent> ActivePlaybackContent;
 
-	bool Playing2D = false;
-	bool CrossLevel = false;
+	UPROPERTY(BlueprintReadOnly, Category = "PlaybackParameters")
+	TArray<TObjectPtr<UMTWPPlaybackParameter>> ActivePlaybackParameters;
 
+public:
 
-	friend class UMTWPAudioSubsystem;
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	virtual inline bool IsValid() const { return true; }
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	virtual void Play() {};
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	virtual void Stop() {};
+
+	//UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	//virtual void Pause() {};
+
+protected:
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	void UpdatePlaybackContent(UMTWPPlaybackContent* UpdatingPlaybackContent) {}
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	void UpdatePlaybackParameter(UMTWPPlaybackParameter* UpdatingPlaybackParameter) {}
 };
 
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPAudioInstanceDefinition_Base
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPPlaybackContent : public UObject
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
-	virtual bool IsValid() const { return true; }
+protected:
+
+	UPROPERTY(BlueprintReadOnly, Category = "PlaybackContent")
+	const bool bCrossWorld = false;
+
+public:
+	inline virtual bool IsValid() const { return true; }
 };
 
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPAudioEventDefinition_Base
-{
-	GENERATED_BODY()
 
-		virtual bool IsValid() const { return true; }
-};
 
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API FMTWPAudioPlaybackParamsDefinition_Base
-{
-	GENERATED_BODY()
 
-		virtual bool IsValid() const { return true; }
-};
-
-UINTERFACE(BlueprintType, Blueprintable)
-class MTWP_API UFMTWPAudioSystem_Base : public UInterface
-{
-	GENERATED_BODY()
-};
-
-//UCLASS(BlueprintType, Blueprintable)
-class MTWP_API IFMTWPAudioSystem_Base
-{
-	GENERATED_BODY()
-
-		// Must be declared same way
-	using AudioInstanceDefinition = FMTWPAudioInstanceDefinition_Base;
-	using AudioEventDefinition = FMTWPAudioEventDefinition_Base;
-	using AudioCreationParamsDefinition = FMTWPAudioCreationParamsDefinition_Base;
-	using AudioPlaybackParamsDefinition = FMTWPAudioPlaybackParamsDefinition_Base;
-
-	// Just copy-paste it into your implementation
-	bool IsPlaybackAllowed() { return false; }
-	AudioInstanceDefinition Create2D(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition = AudioCreationParamsDefinition(), const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	AudioInstanceDefinition CreateAttached(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	AudioInstanceDefinition CreateAtLocation(const AudioEventDefinition& InEventDifinition, const AudioCreationParamsDefinition& InAudioCreationParamsDefinition, const AudioPlaybackParamsDefinition& InAudioPlaybackParamsDefinition = AudioPlaybackParamsDefinition()) { return AudioInstanceDefinition(); }
-	void SetPlaybackParams(AudioInstanceDefinition InAudioInstanceDefinition, const AudioPlaybackParamsDefinition InAudioPlaybackParamsDifinition) { }
-	void Play(AudioInstanceDefinition& InAudioInstanceDefinition, const AudioEventDefinition& InEventDifinition) { }
-};
-
-UCLASS(Blueprintable, BlueprintType) // Abstract?
-class MTWP_API UMTWPAudioSubsystem : public UGameInstanceSubsystem
+class MTWP_API UMTWPPlaybackParameter : public UObject
 {
 	GENERATED_BODY()
 
 public:
 
-	template <typename AudioSystem>
-	typename AudioSystem::AudioInstanceDefinition PlaySound(const typename AudioSystem::AudioEventDefinition& InAudioEventDefinition, const typename AudioSystem::AudioCreationParamsDefinition& InCreationParams = AudioSystem::AudioCreationParamsDefinition(), const typename AudioSystem::AudioPlaybackParamsDefinition = AudioSystem::AudioPlaybackParamsDefinition());
+	UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
+	bool IsValid() const { return true; }
 
 protected:
 
-	template <typename AudioSystem>
-	AudioSystem* GetAudioSystem();
+	UPROPERTY(BlueprintReadOnly, Category = "PlaybackParameter")
+	TObjectPtr<UMTWPAudioInstance> AudioInstance;
 
-	//// Classname + ActiveAudioSystems index
-	//TMap<TSubclassOf<UFMTWPAudioSystem_Base>, uint8> ActiveAudioSystemMap;
-
-	//// UnReAl EnGiNe MaGiC: Garbage collector watches UObject* and array of UObject* only
-	//TArray<TUniquePtr<UFMTWPAudioSystem_Base>> ActiveAudioSystems;
 };
 
-//template <typename AudioSystem>
-//typename AudioSystem::AudioInstanceDefinition UMTWPAudioSubsystem::PlaySound(const typename AudioSystem::AudioEventDefinition& InAudioEventDefinition, const typename AudioSystem::AudioCreationParamsDefinition& InCreationParams, const typename AudioSystem::AudioPlaybackParamsDefinition InPlaybackParams)
-//{
-//	if (!InAudioEventDefinition.IsValid())
-//	{
-//		UE_LOG(LogMTWP, Error, TEXT("Invalid AudioEventDefinition"));
-//		return AudioSystem::AudioInstanceDefinition();
-//	}
-//
-//	if (!InCreationParams.IsValid())
-//	{
-//		UE_LOG(LogMTWP, Error, TEXT("Invalid AudioCreationParamsDefinition"));
-//		return AudioSystem::AudioInstanceDefinition();
-//	}
-//
-//	if (!InPlaybackParams.IsValid())
-//	{
-//		UE_LOG(LogMTWP, Error, TEXT("Invalid AudioPlaybackParamsDefinition"));
-//		return AudioSystem::AudioInstanceDefinition();
-//	}
-//
-//	AudioSystem* AudioSystemPtr = GetAudioSystem<AudioSystem>();
-//	if (!AudioSystemPtr)
-//	{
-//		UE_LOG(LogMTWP, Error, TEXT("AudioSystem not found"));
-//		return AudioSystem::AudioInstanceDefinition();
-//	}
-//
-//	if (!AudioSystemPtr->IsPlaybackAllowed())
-//	{
-//		UE_LOG(LogMTWP, Error, TEXT("Playback not allowed"));
-//		return AudioSystem::AudioInstanceDefinition();
-//	}
-//
-//	AudioSystem::AudioInstanceDefinition AudioInstanceDefinition;
-//	if (InCreationParams.Playing2D)
-//	{
-//		AudioInstanceDefinition = AudioSystemPtr->Create2D(InAudioEventDefinition, InCreationParams, InPlaybackParams);
-//	}
-//	else if (InCreationParams.SceneComponent)
-//	{
-//		AudioInstanceDefinition = AudioSystemPtr->CreateAttached(InAudioEventDefinition, InCreationParams, InPlaybackParams);
-//	}
-//	else
-//	{
-//		AudioInstanceDefinition = AudioSystemPtr->CreateAtLocation(InAudioEventDefinition, InCreationParams, InPlaybackParams);
-//	}
-//
-//	if (!AudioInstanceDefinition.IsValid())
-//	{
-//		UE_LOG(LogMTWP, Error, TEXT("AudioInstanceDefinition is invalid"));
-//		return AudioSystem::AudioInstanceDefinition();
-//	}
-//
-//	AudioSystemPtr->Play(AudioInstanceDefinition, InAudioEventDefinition);
-//
-//	return AudioInstanceDefinition;
-//}
-//
-//template <typename AudioSystem>
-//AudioSystem* UMTWPAudioSubsystem::GetAudioSystem()
-//{
-//	//uint8 AudioSystemIndex = ActiveAudioSystemMap.FindRef(AudioSystem::StaticClass());
-//	//if (ActiveAudioSystems.IsValidIndex(AudioSystemIndex))
-//	//{
-//	//	return Cast<AudioSystem>(ActiveAudioSystems[AudioSystemIndex].Get());
-//	//}
-//
-//	return nullptr;
-//}< / code>
-//
-//
-//
-//I'm trying to make a generic audio system for my game.
-//I want to have a base class for audio system, and then have a bunch of derived classes for different audio systems.
-//I want to have a base class for audio creation params, and then have a bunch of derived classes for different audio systems.
-//I want to have a base class for audio instance, and then have a bunch of derived classes for different audio systems.
-//I want to have a base class for audio event, and then have a bunch of derived classes for different audio systems.
-//I want to have a base class for audio playback params, and then have a bunch of derived classes for different audio systems.
-//I want to have a base class for audio subsystem, and then have a bunch of derived classes for different audio systems.
-//
-//I'm not sure how to go about this. Any help would be appreciated. Thanks!
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPPlaybackParameterNumeric : public UMTWPPlaybackParameter
+{
+	GENERATED_BODY()
+
+public:
+
+	UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
+	virtual inline float GetValue() const { return Value; }
+
+	UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
+	virtual SetValue(const float NewValue);
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, Category = "PlaybackParameter")
+	float Value = 0;
+};
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPPlaybackParameterString : public UMTWPPlaybackParameter
+{
+    GENERATED_BODY()
+
+public:
+
+    UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
+	virtual inline FString GetValue() const { return Value; }
+
+	UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
+	virtual void SetValue(const FString& NewValue);
+
+protected:
+
+	UPROPERTY(BlueprintReadOnly, Category = "PlaybackParameter")
+	FString Value;
+};
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPPlaybackParameterBool : public UMTWPPlaybackParameter
+{
+    GENERATED_BODY()
+
+public:
+        UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
+		virtual inline bool GetValue() const { return Value; }
+
+		UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
+		virtual void SetValue(const bool NewValue);
+
+protected:
+	
+	UPROPERTY(BlueprintReadOnly, Category = "PlaybackParameter")
+	bool Value;
+};
+
+
+
+
+
+UCLASS(Abstact, BlueprintType, Blueprintable)
+class MTWP_API UMTWPAudioInterface : public UObject
+{
+	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPPlaybackContent* PlaybackContent, TArray<UMTWPPlaybackParameter*>& AudioParameters = TArray<UMTWPPlaybackParameter*>()) = 0;
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPPlaybackContent* PlaybackContent, TArray<UMTWPPlaybackParameter*>& AudioParameters, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) = 0;
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	virtual UMTWPAudioInstance* CreateAudioInstanceAttached(UMTWPPlaybackContent* PlaybackContent, TArray<UMTWPPlaybackParameter*>& AudioParameters, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), EAttachmentRule AttachmentRule = EAttachmentRule::KeepRelative) = 0;
+};
+
+
+UCLASS(Blueprintable, BlueprintType)
+class MTWP_API UMTWPAudioSubsystem : public UGameInstanceSubsystem
+{
+	GENERATED_BODY()
+};

@@ -41,21 +41,21 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 	}
 
-	if (auto GI = GetGameInstance(); IsValid(GI))
-	{
-		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
-		{
-			auto HitSwitchValue = HitSwitchDefinitionDefault;
-			if (auto Material = Hit.Component->GetMaterial(0); IsValid(Material))
-			{
-				if (auto PhysMaterial = Material->GetPhysicalMaterial())
-				{
-					if (PhysMaterial->SurfaceType == EPhysicalSurface::SurfaceType1)
-					{
-						HitSwitchValue = HitSwitchDefinitionMetal;
-					}
-				}
-			}
+	//if (auto GI = GetGameInstance(); IsValid(GI))
+	//{
+	//	if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
+	//	{
+	//		auto HitSwitchValue = HitSwitchDefinitionDefault;
+	//		if (auto Material = Hit.Component->GetMaterial(0); IsValid(Material))
+	//		{
+	//			if (auto PhysMaterial = Material->GetPhysicalMaterial())
+	//			{
+	//				if (PhysMaterial->SurfaceType == EPhysicalSurface::SurfaceType1)
+	//				{
+	//					HitSwitchValue = HitSwitchDefinitionMetal;
+	//				}
+	//			}
+	//		}
 
 			//TArray<FMTWPRtpcDefenition> RtpcDefinitions;
 

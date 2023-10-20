@@ -28,21 +28,21 @@ class AMTWPProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-
+	û
  // Audio
-public:
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FMTWPAudioEventDefinition_WWise AudioEventDefinition;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FMTWPAudioPlaybackParamsDefinition_WWise AudioPlaybackParamsDefinition;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FMTWPRtpcDefinition_WWise HitSwitchDefinitionDefault;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FMTWPRtpcDefinition_WWise HitSwitchDefinitionMetal;
+//public:
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPAudioEventDefinition_WWise AudioEventDefinition;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPAudioPlaybackParamsDefinition_WWise AudioPlaybackParamsDefinition;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPRtpcDefinition_WWise HitSwitchDefinitionDefault;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPRtpcDefinition_WWise HitSwitchDefinitionMetal;
 
 
 public:
