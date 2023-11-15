@@ -7,6 +7,8 @@
 
 #include "MTWPAudioSubsystem.h"
 
+#include "MTWPAudioInterface_WWise.h"
+
 AMTWPProjectile::AMTWPProjectile() 
 {
 	// Use a sphere as a simple collision representation
@@ -41,9 +43,9 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		OtherComp->AddImpulseAtLocation(GetVelocity() * 100.0f, GetActorLocation());
 	}
 
-	//if (auto GI = GetGameInstance(); IsValid(GI))
-	//{
-	//	if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
+	if (auto GI = GetGameInstance(); IsValid(GI))
+	{
+		//if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
 	//	{
 	//		auto HitSwitchValue = HitSwitchDefinitionDefault;
 	//		if (auto Material = Hit.Component->GetMaterial(0); IsValid(Material))
@@ -84,6 +86,12 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 //#endif
 				//}
 			//}
-		}	
+	//	}	
+
+		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
+		{
+			AS->WWiseAudioInterface->CreateAudioInstance2D(AudioEntity);
+		}
+
 	}
 }

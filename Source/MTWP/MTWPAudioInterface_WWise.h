@@ -3,30 +3,27 @@
 #include "CoreMinimal.h"
 
 #include "MTWPAudioSubsystem.h"
+
+#include <AkRtpc.h>
+
 #include "MTWPAudioInterface_WWise.generated.h"
 
 
-UCLASS (BlueprintType, Blueprintable)
+UCLASS(BlueprintType, Blueprintable)
 class MTWP_API UMTWPAudioInstance_WWise : public UMTWPAudioInstance
 {
 	GENERATED_BODY()
 
 public:
 
-	UFUNCTION(BlueprintCallable, Category = "AudioInstance | WWise")
-	virtual bool IsValid() const override;
+	//UFUNCTION(BlueprintCallable, Category = "AudioInstance | WWise")
+	//virtual bool IsValid() const override;
 
-	UFUNCTION(BlueprintCallable, Category = "AudioInstance | WWise")
 	virtual void Play() override;
 
-	UFUNCTION(BlueprintCallable, Category = "AudioInstance | WWise")
 	virtual void Stop() override;
 
-	//UFUNCTION(BlueprintCallable, Category = "AudioInstance")
 	//virtual void Pause() = 0;
-
-	UFUNCTION(BlueprintCallable, Category = "AudioInstance | WWise")
-	virtual void SetPlaybackParameters(const UMTWPPlaybackParameters* InPlaybackParameters);
 
 protected:
 
@@ -34,76 +31,123 @@ protected:
 	TObjectPtr<class UAkComponent> Component = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AudioInstance | WWise")
-	int PlayingID = AK_INVALID_PLAYING_ID;
+	int PlayingID = 0;
 
-	UPROPERTY(BlueprintReadOnly, Category = "AudioInstance | WWise")
-	int ActiveEventID = AK_INVALID_UNIQUE_ID; // UAkEvent in ActivePlaybackParameters may be destroyed so we contain it's id.
+protected:
+
+	virtual void OnPlaybackParameterChanged(const FName& Name);
+
+private:
+
+	void UpdateEvent(UMTWPPareterEvent_WWise* EventParam);
+
+	void UpdateRTPC(UMTWParameterPRTPC_WWise* RTPCParam);
+
+	void UpdateSwitch(UMTWParameterSwitch_WWise* SwitchParam);
+
 
 	friend UMTWPAudioInterface_WWise;
 };
 
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API UMTWPSwitch_Wwise
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPPareterEvent_WWise : public UMTWPPlaybackParameterObject
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class UAkSwitchValue> Switch = nullptr;
+    UPROPERTY(EditDefaultsOnly)
+    TObjectPtr<class UAkAudioEvent> EventObject = nullptr;
 
-	UPROPERTY(EditDefaultsOnly)
-	FString SwitchGroup = "";
-
-	bool IsValid() const;
+	UPROPERTY()
+	TObjectPtr<class UAkAudioEvent> PreviousEventObject = nullptr;
 
 protected:
-	mutable FString NameString = "";
 
-	friend FMTWPAudioInstance_WWise;
+	virtual inline UObject* GetValue() const override { return Cast<UObject>(EventObject); }
+
+	virtual inline UObject* GetPreviousValue() const override { return Cast<UObject>(PreviousEventObject); }
+
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
 };
 
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API UMTWPRtpc_WWise
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWParameterPRTPC_WWise : public UMTWPPlaybackParameterNumeric
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkRtpc> RtpcObject = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	int InterpolationTimeMs = 0;
+
+
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
+
+	friend uint32 GetTypeHash(const UMTWParameterPRTPC_WWise& Rtpc);
+};
+
+UCLASS(BlueprintType, Blueprintable, EditInlineNew)
+class MTWP_API UMTWParameterSwitch_WWise : public UMTWPPlaybackParameterObject
 {
 	GENERATED_BODY()
 
 	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<class UAkRtpc> Rtpc = nullptr;
+	FString SwitchGroup;
 
-	UPROPERTY(EditAnywhere)
-	float Value = 0;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkSwitchValue> SwitchValue = nullptr;
+
+	UPROPERTY()
+	TObjectPtr<class UAkSwitchValue> PreviousSwitchValue = nullptr;
+
 
 	UPROPERTY(EditDefaultsOnly)
 	uint32 InterpolationTimeMs = 0;
 
-	bool IsValid() const;
+	virtual inline UObject* GetValue() const override { return Cast<UObject>(SwitchValue); }
 
-protected:
-	mutable uint32 Id = 0;
-	mutable FString NameString = "";
+	virtual inline UObject* GetPreviousValue() const override { return Cast<UObject>(PreviousSwitchValue); }
 
-	friend FMTWPAudioInstance_WWise;
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
+
+	friend uint32 GetTypeHash(const UMTWParameterSwitch_WWise& Switch);
 };
 
-USTRUCT(BlueprintType, Blueprintable)
-struct MTWP_API UMTWPPlaybackParameters_WWise : public UMTWPPlaybackParameters
+UCLASS(BlueprintType, Blueprintable, EditInlineNew)
+class MTWP_API UMTWPAudioEntity_WWise : public UMTWPAudioEntity
 {
 	GENERATED_BODY()
+	
+protected:
 
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<UAkAudioEvent> Event;
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TObjectPtr<UMTWPPareterEvent_WWise> Event;
 
-	UPROPERTY(EditDefaultsOnly)
-	UMTWPSwitch_Wwise Switch;
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TArray<UMTWParameterPRTPC_WWise*> RTPCs;
+	
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TArray<UMTWParameterSwitch_WWise*> SwitchesSet;
 
-	UPROPERTY(EditDefaultsOnly)
-	TSet<FMTWPRtpc_WWise> RtpcSet;
-
-	UPROPERTY(EditDefaultsOnly, Category = "PlaybackParameters | AcionParameters")
-	EAkCurveInterpolation FadeInCurveType = EAkCurveInterpolation::Linear;
-
-	UPROPERTY(EditDefaultsOnly, Category = "PlaybackParameters | AcionParameters")
-	EAkCurveInterpolation FadeOutCurveType = EAkCurveInterpolation::Linear;
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
 };
+
+
+inline uint32 GetTypeHash(const UMTWParameterSwitch_WWise& Switch)
+{
+    return GetTypeHash(Switch.SwitchGroup);
+}
+
+inline uint32 GetTypeHash(const UMTWParameterPRTPC_WWise& Rtpc)
+{
+	return GetTypeHash(Rtpc.RtpcObject->GetShortID());
+}
+
 
 UCLASS(Blueprintable, BlueprintType)
 class MTWP_API UMTWPAudioInterface_WWise : public UMTWPAudioInterface
@@ -112,9 +156,9 @@ class MTWP_API UMTWPAudioInterface_WWise : public UMTWPAudioInterface
 
 public:
 
-	virtual UMTWPAudioInstance* CreateAudioInstance2D(const UMTWPPlaybackParameters* PlaybackParameters, const bool bCrossWorld = false) override;
-	
-	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(const UMTWPPlaybackParameters* AudioEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) override;
-	
-	virtual UMTWPAudioInstance* CreateAudioInstanceAttached(const UMTWPPlaybackParameters* AudioEntity, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), EAttachmentRule AttachmentRule = EAttachmentRule::KeepRelative) override;
+	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false) override;
+
+	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) override { return nullptr; }
+
+	//virtual UMTWPAudioInstance* CreateAudioInstanceAttached(const UMTWPPlaybackParameters* AudioEntity, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), EAttachmentRule AttachmentRule = EAttachmentRule::KeepRelative) override;
 };

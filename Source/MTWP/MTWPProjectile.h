@@ -8,7 +8,7 @@
 #include <AkAudioEvent.h>
 #include <AkSwitchValue.h>
 
-#include "MTWPAudioStrategy_WWise.h"
+#include "MTWPAudioSubsystem.h"
 
 #include "MTWPProjectile.generated.h"
 
@@ -28,7 +28,11 @@ class AMTWPProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-	û
+public:
+
+	UPROPERTY(EditDefaultsOnly, Instanced, Category = "Projectile | Audio")
+	TObjectPtr<UMTWPAudioEntity> AudioEntity;
+
  // Audio
 //public:
 //
