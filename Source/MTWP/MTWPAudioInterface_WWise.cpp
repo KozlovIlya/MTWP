@@ -85,11 +85,8 @@ void UMTWPAudioInstance_WWise::Stop()
 
 void UMTWPAudioInstance_WWise::OnPlaybackParameterChanged(const FName& Name)
 {
-	if (auto EventParam = Cast<UMTWPPareterEvent_WWise>(GetPlaybackParameter(Name)))
-	{
-		UpdateEvent(EventParam);
-	}
-	else if (auto RTPCParam = Cast<UMTWParameterPRTPC_WWise>(GetPlaybackParameter(Name)))
+
+	if (auto RTPCParam = Cast<UMTWParameterPRTPC_WWise>(GetPlaybackParameter(Name)))
 	{
 		UpdateRTPC(RTPCParam);
 	}
@@ -101,26 +98,6 @@ void UMTWPAudioInstance_WWise::OnPlaybackParameterChanged(const FName& Name)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::OnPlaybackParameterChanged: Playback parameter is not valid"));
 	}
-}
-
-void UMTWPAudioInstance_WWise::UpdateEvent(UMTWPPareterEvent_WWise* EventParam)
-{
-	//if (!!!GetWorld() || !!!FAkAudioDevice::Get())
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateEvent: World or AudioDevice is not valid"));
-	//	return;
-	//}
-
-	//if (IsValid(EventParam))
-	//{
-	//	UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateEvent: EventParam is not valid"));
-	//       return;
-	//}
-
-	//Component->SetAutoDestroy(false);
-	//// TODO: Add curcvetype and interpolation time
-	//UAkGameplayStatics::ExecuteActionOnPlayingID, PlayingID, AkActionOnEventType::Stop, 0, EAkCurveInterpolation::Linear);
-
 }
 
 void UMTWPAudioInstance_WWise::UpdateRTPC(UMTWParameterPRTPC_WWise* RTPCParam)
@@ -150,15 +127,46 @@ void UMTWPAudioInstance_WWise::UpdateSwitch(UMTWParameterSwitch_WWise* SwitchPar
         UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateSwitch: SwitchParam or SwitchValue is not valid"));
         return;
     }
-
+	
 	if (IsValid(Component))
 	{
-		Component->SetSwitch(SwitchParam->SwitchValue, "", "");
-	}
+        Component->SetSwitch(SwitchParam->SwitchValue, "", "");
+    }
 	else
 	{
-		// TODO: Add interpolation settings
-		//UAkGameplayStatics::ExecuteActionOnPlayingID, PlayingID, AkActionOnEventType::Stop, 0, EAkCurveInterpolation::Linear);
+		if (!!!IsValid(Event))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateSwitch: Event is not valid"));
+			return;
+		}
+
+		// TODO: Learn more about spatial sound in WWise
+		//FAkAudioDevice::GetSpatialAudioListener();
+
+		// TODO: Need to contain 2D-sound listner somewhere.
+		Component = *FAkAudioDevice::Get()->GetDefaultListeners().begin();
+
+		if (!!!IsValid(Component))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: AudioComponent is not valid"));
+			return;
+		}
+
+		// TODO: Learn more about callbacks
+		PlayingID =
+			FAkAudioDevice::Get()->PostAkAudioEventOnComponent(
+				Event,
+				Component,
+				0U,
+				nullptr,
+				nullptr,
+				false
+			);
+
+		for (auto* Param : PlaybackParameters)
+		{
+			AddPlaybackParameter(Param);
+		}
 	}
 }
 
@@ -182,7 +190,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
 		return nullptr;
 	}
 
-	auto InEventObject = InEntity_WWise->Event->EventObject;
+	auto InEventObject = InEntity_WWise->Event;
 	if (!!!IsValid(InEventObject))
 	{
         return nullptr;
@@ -210,7 +218,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
 	// TODO: Learn more about callbacks
 	AudioInstance->PlayingID =
 		FAkAudioDevice::Get()->PostAkAudioEventOnComponent(
-            InEntity_WWise->Event->EventObject,
+            InEntity_WWise->Event,
 			AudioInstance->Component,
 			0U,
 			nullptr,
@@ -223,6 +231,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
         UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: PlayingID is not valid"));
         return nullptr;
     }
+	AudioInstance->Event = InEntity_WWise->Event;
 	
 	for (auto RTPC : InEntity_WWise->RTPCs)
 	{
@@ -242,7 +251,6 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
 		{
             UE_LOG(LogTemp, Log, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: RTPC set for sound 2D"));
         }
-
 		AudioInstance->AddPlaybackParameter(RTPC);
 	}
 
@@ -259,8 +267,6 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
 
 		UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: switch temporary could not be set for sound 2D"));
 	}
-
-	AudioInstance->PlaybackPositioning = EMTWPAudioPlaybackPositioning::Sound2D;
 
 	return AudioInstance;
 }

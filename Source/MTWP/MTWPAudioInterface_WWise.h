@@ -5,6 +5,7 @@
 #include "MTWPAudioSubsystem.h"
 
 #include <AkRtpc.h>
+#include <AkGameplayTypes.h>
 
 #include "MTWPAudioInterface_WWise.generated.h"
 
@@ -27,6 +28,17 @@ public:
 
 protected:
 
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkAudioEvent> Event;
+
+	UPROPERTY(EditDefaultsOnly)
+	int TransitionDurationMs = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	EAkCurveInterpolation CurveInterpolation = EAkCurveInterpolation::Linear;
+
+protected:
+
 	UPROPERTY(EditDefaultsOnly, Category = "AudioInstance | WWise")
 	TObjectPtr<class UAkComponent> Component = nullptr;
 
@@ -39,36 +51,12 @@ protected:
 
 private:
 
-	void UpdateEvent(UMTWPPareterEvent_WWise* EventParam);
-
 	void UpdateRTPC(UMTWParameterPRTPC_WWise* RTPCParam);
 
 	void UpdateSwitch(UMTWParameterSwitch_WWise* SwitchParam);
 
 
 	friend UMTWPAudioInterface_WWise;
-};
-
-
-UCLASS(BlueprintType, Blueprintable)
-class MTWP_API UMTWPPareterEvent_WWise : public UMTWPPlaybackParameterObject
-{
-    GENERATED_BODY()
-
-    UPROPERTY(EditDefaultsOnly)
-    TObjectPtr<class UAkAudioEvent> EventObject = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<class UAkAudioEvent> PreviousEventObject = nullptr;
-
-protected:
-
-	virtual inline UObject* GetValue() const override { return Cast<UObject>(EventObject); }
-
-	virtual inline UObject* GetPreviousValue() const override { return Cast<UObject>(PreviousEventObject); }
-
-	friend UMTWPAudioInterface_WWise;
-	friend UMTWPAudioInstance_WWise;
 };
 
 UCLASS(BlueprintType, Blueprintable)
@@ -124,8 +112,16 @@ class MTWP_API UMTWPAudioEntity_WWise : public UMTWPAudioEntity
 	
 protected:
 
-	UPROPERTY(EditDefaultsOnly, Instanced)
-	TObjectPtr<UMTWPPareterEvent_WWise> Event;
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkAudioEvent> Event;
+
+	UPROPERTY(EditDefaultsOnly)
+	int TransitionDurationMs = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	EAkCurveInterpolation CurveInterpolation = EAkCurveInterpolation::Linear;
+	
+protected:
 
 	UPROPERTY(EditDefaultsOnly, Instanced)
 	TArray<UMTWParameterPRTPC_WWise*> RTPCs;

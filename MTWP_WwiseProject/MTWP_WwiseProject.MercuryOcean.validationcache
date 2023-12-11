@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ValidationCache Version="1" SchemaVersion="110">
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Switches\Default Work Unit.wwu" DateLow="1693961080" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\States\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1693961355" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Queries\Factory Queries.wwu" DateLow="1693340173" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Queries\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1693340173" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Presets\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\MTWP_WwiseProject.wproj" DateLow="1693961804" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\MTWP_WwiseProject.MercuryOcean.wsettings" DateLow="1693996216" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Metadata\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Events\Default Work Unit.wwu" DateLow="1693961237" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Effects\Factory Effects.wwu" DateLow="1693340173" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Effects\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1693340173" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1693959850" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1693959256" DateHigh="0"/>
-	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1693996216" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Switches\Default Work Unit.wwu" DateLow="1694654006" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\States\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1694654006" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Queries\Factory Queries.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Queries\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Presets\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\MTWP_WwiseProject.wproj" DateLow="1694654006" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\MTWP_WwiseProject.MercuryOcean.wsettings" DateLow="1694683411" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Metadata\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1694654020" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1694654008" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Events\Default Work Unit.wwu" DateLow="1694654006" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Effects\Factory Effects.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Effects\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1694654006" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1694653893" DateHigh="0"/>
+	<ValidationCacheItem File="C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1694683411" DateHigh="0"/>
 </ValidationCache>

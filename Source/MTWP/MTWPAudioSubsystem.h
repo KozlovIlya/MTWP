@@ -26,15 +26,6 @@ inline FString ToString(UObject* Value)
     return Value ? Value->GetName() : TEXT("nullptr");
 }
 
-
-UENUM(BlueprintType)
-enum class EMTWPAudioPlaybackPositioning : uint8
-{
-    Sound2D,
-    OnLocation,
-    Attached
-};
-
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
 class MTWP_API UMTWPPlaybackParameter : public UObject
 {
@@ -238,11 +229,6 @@ public:
 
 public:
 
-	UFUNCTION(BlueprintCallable)
-	inline EMTWPAudioPlaybackPositioning GetPlaybackPositioning() const { return PlaybackPositioning; }
-
-public:
-
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Numeric")
 	virtual void SetParameterNumeric(const FName& Name, float Value);
 
@@ -330,10 +316,6 @@ protected:
 
 	UPROPERTY(BlueprintReadWrite, Category = "Playback Parameters")
 	TArray<UMTWPPlaybackParameter*> PlaybackParameters;
-
-
-	UPROPERTY(BlueprintReadOnly)
-	EMTWPAudioPlaybackPositioning PlaybackPositioning;
 
 
 	friend UMTWPAudioInterface;
