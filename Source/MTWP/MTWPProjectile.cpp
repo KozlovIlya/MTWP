@@ -4,10 +4,16 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Components/SphereComponent.h"
 #include "PhysicalMaterials/PhysicalMaterial.h"
+#include "EngineUtils.h"
 
 #include "MTWPAudioSubsystem.h"
 
 #include "MTWPAudioInterface_WWise.h"
+#include "AkGameplayStatics.h"
+
+#include "Kismet/GameplayStatics.h"
+
+#include "AkComponent.h"
 
 AMTWPProjectile::AMTWPProjectile() 
 {
@@ -45,53 +51,37 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 	if (auto GI = GetGameInstance(); IsValid(GI))
 	{
-		//if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
-	//	{
-	//		auto HitSwitchValue = HitSwitchDefinitionDefault;
-	//		if (auto Material = Hit.Component->GetMaterial(0); IsValid(Material))
-	//		{
-	//			if (auto PhysMaterial = Material->GetPhysicalMaterial())
-	//			{
-	//				if (PhysMaterial->SurfaceType == EPhysicalSurface::SurfaceType1)
-	//				{
-	//					HitSwitchValue = HitSwitchDefinitionMetal;
-	//				}
-	//			}
-	//		}
-
-			//TArray<FMTWPRtpcDefenition> RtpcDefinitions;
-
-			//if (IsValid(GetProjectileMovement()))
-			//{
-			//	HitPowerRtpc.Value = GetVelocity().Size();
-//				HitPowerRtpc.MaxGameValue = GetProjectileMovement()->GetMaxSpeed();
-//				RtpcDefinitions.Add(HitPowerRtpc);
-//
-//					
-//				if (auto Component = AS->PlaySound(HitSoundEvent,
-//					FMTWPAudioCreationParams(Hit.ImpactPoint),
-//					FMTWPAudioPlaybackParams
-//					(
-//						{
-//							HitSoundEventCooldownSeconds,
-//							HitSwitchValue,
-//							HitSwitchGroupName,
-//							RtpcDefinitions
-//						}
-//					)
-//				))
-//				{
-//#ifdef WITH_EDITOR
-//					DrawDebugSphere(GetWorld(), GetActorLocation(), HitPowerRtpc.Value / HitPowerRtpc.MaxGameValue * 50, 4, HitSwitchValue == HitSwitchValueMetal ? FColor::Red : FColor::Black, true, 2);
-//#endif
-				//}
-			//}
-	//	}	
-
-		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
+		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS) && IsValid(AS->WWiseAudioInterface))
 		{
-			AS->WWiseAudioInterface->CreateAudioInstance2D(AudioEntity);
-		}
+			//auto AI = AS->WWiseAudioInterface->CreateAudioInstanceAtLocation(AudioEntity, HitComp->GetComponentLocation());
+			//auto AI = AS->WWiseAudioInterface->CreateAudioInstance2D(AudioEntity);
+		    auto AI = AS->WWiseAudioInterface->CreateAudioInstanceAttached(AudioEntity, HitComp);
+			if (IsValid(AI))
+			{
+				if (IsValid(OtherActor))
+				{
+					FVector RelativeVelocity = OtherActor->GetVelocity() - this->GetVelocity();
+					float HitPower = 0.000002f * FMath::Pow(RelativeVelocity.Size(), 2);
+					AI->SetParameterValueNumeric("HitPower", HitPower);
+				}
 
+				if (auto Material = Hit.Component->GetMaterial(0); IsValid(Material))
+				{
+					if (auto PhysMaterial = Material->GetPhysicalMaterial())
+					{
+						if (PhysMaterial->SurfaceType == EPhysicalSurface::SurfaceType1)
+						{
+							AI->SetParameterValueString("Surface", "Metal");
+							//Cast<UMTWPAudioInstance_WWise>(AI)->Component->SetSwitch(nullptr, "Surface", "Metal");
+						}
+					}
+				}
+				AI->Play();
+			}
+		}
+		else
+		{
+            UE_LOG(LogTemp, Warning, TEXT("Audio Subsystem or Audio Interface is not valid"));
+		}
 	}
 }

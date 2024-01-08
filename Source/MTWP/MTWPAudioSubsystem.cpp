@@ -60,7 +60,22 @@
 //}
 
 
-void UMTWPAudioInstance::SetParameterNumeric(const FName& Name, float Value)
+void UMTWPAudioInstance::Play()
+{
+    //if (GetPlayingStatus() == EMTWPPlayingStatus::Init)
+    //{
+    //    if (StartLambdaDelegate.IsBound())
+    //    {
+    //        StartLambdaDelegate.Execute();
+    //    }
+    //    else
+    //    {
+    //        UE_LOG(LogTemp, Warning, TEXT("Start delegate is not bound."));
+    //    }
+    //}
+}
+
+void UMTWPAudioInstance::SetParameterValueNumeric(const FName& Name, float Value)
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterNumeric>(GetPlaybackParameter(Name)); IsValid(Parameter))
     {       
@@ -68,9 +83,16 @@ void UMTWPAudioInstance::SetParameterNumeric(const FName& Name, float Value)
         {
             if (Parameter->Value != Value)
             {
-                Parameter->PreviousValue = Parameter->Value;
-                Parameter->Value = Value;
-                PlaybackParameterChanged.Broadcast(Name);
+                if (UpdateParameterNumeric(Parameter, Value))
+                {
+                    Parameter->PreviousValue = Parameter->Value;
+                    Parameter->Value = Value;
+                    PlaybackParameterChanged.Broadcast(Name);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %f"), *Name.ToString(), Value);
+                }
             }
             else
             {
@@ -89,7 +111,7 @@ void UMTWPAudioInstance::SetParameterNumeric(const FName& Name, float Value)
     
 }
 
-void UMTWPAudioInstance::SetParameterString(const FName& Name, const FString& Value)
+void UMTWPAudioInstance::SetParameterValueString(const FName& Name, const FString& Value)
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterString>(GetPlaybackParameter(Name)); IsValid(Parameter))
     {
@@ -97,9 +119,16 @@ void UMTWPAudioInstance::SetParameterString(const FName& Name, const FString& Va
         {
             if (Parameter->Value != Value)
             {
-                Parameter->PreviousValue = Parameter->Value;
-                Parameter->Value = Value;
-                PlaybackParameterChanged.Broadcast(Name);
+                if (UpdateParameterString(Parameter, Value))
+                {
+                    Parameter->PreviousValue = Parameter->Value;
+                    Parameter->Value = Value;
+                    PlaybackParameterChanged.Broadcast(Name);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %s"), *Name.ToString(), *Value);
+                }
             }
             else
             {
@@ -117,14 +146,22 @@ void UMTWPAudioInstance::SetParameterString(const FName& Name, const FString& Va
     }
 }
 
-void UMTWPAudioInstance::SetParameterBoolean(FName Name, bool Value)
+void UMTWPAudioInstance::SetParameterValueBoolean(FName Name, bool Value)
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterBoolean>(GetPlaybackParameter(Name)); IsValid(Parameter))
     {
         if (Parameter->Value != Value)
         {
-            Parameter->Value = Value;
-            PlaybackParameterChanged.Broadcast(Name);
+            if (UpdateParameterBoolean(Parameter, Value))
+            {
+                Parameter->PreviousValue = Parameter->Value;
+                Parameter->Value = Value;
+                PlaybackParameterChanged.Broadcast(Name);
+            }
+            else
+            {
+                UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %d"), *Name.ToString(), Value);
+            }
         }
         else
         {
@@ -137,27 +174,33 @@ void UMTWPAudioInstance::SetParameterBoolean(FName Name, bool Value)
     }
 }
 
-void UMTWPAudioInstance::SetParameterObjectPointer(const FName& InName, UObject* Object)
+void UMTWPAudioInstance::SetParameterValueObjectPointer(const FName& InName, UObject* Value)
 {
-    if (auto Parameter = Cast<UMTWPPlaybackParameterObject>(GetPlaybackParameter(InName)))
+    if (auto Parameter = Cast<UMTWPPlaybackParameterObjectPointer>(GetPlaybackParameter(InName)))
     {
-        if (Parameter->IsValidValue(Object))
+        if (Parameter->IsValidValue(Value))
         {
-            if (Parameter->GetValue() != Object)
+            if (Parameter->GetValue() != Value)
             {
-                // TODO: think about this later
-                Parameter->SetPreviousValue(Parameter->GetValue());
-                Parameter->SetValue(Object);
-                PlaybackParameterChanged.Broadcast(InName);
+                if (UpdateParameterObjectPointer(Parameter, Value))
+                {
+                    Parameter->SetPreviousValue(Parameter->GetValue());
+                    Parameter->SetValue(Value);
+                    PlaybackParameterChanged.Broadcast(InName);
+                }
+                else
+                {
+                    UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %s"), *InName.ToString(), *Value->GetName());
+                }
             }
             else
             {
-                UE_LOG(LogTemp, Warning, TEXT("Value %s is already set for parameter %s"), *Object->GetName(), *InName.ToString());
+                UE_LOG(LogTemp, Warning, TEXT("Value %s is already set for parameter %s"), *Value->GetName(), *InName.ToString());
             }
         }
         else
         {
-            UE_LOG(LogTemp, Warning, TEXT("Value %s is not valid for parameter %s"), *Object->GetName(), *InName.ToString());
+            UE_LOG(LogTemp, Warning, TEXT("Value %s is not valid for parameter %s"), IsValid(Value) ? (char*)*Value->GetName() : "NULL", *InName.ToString());
         }
     }
     else
@@ -168,7 +211,7 @@ void UMTWPAudioInstance::SetParameterObjectPointer(const FName& InName, UObject*
 
 
 
-float UMTWPAudioInstance::GetParameterNumeric(const FName& Name) const
+float UMTWPAudioInstance::GetParameterValueNumeric(const FName& Name) const
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterNumeric>(GetPlaybackParameterConst(Name)))
     {
@@ -180,7 +223,7 @@ float UMTWPAudioInstance::GetParameterNumeric(const FName& Name) const
     return 0.f;
 }
 
-FString UMTWPAudioInstance::GetParameterString(const FName& Name) const
+FString UMTWPAudioInstance::GetParameterValueString(const FName& Name) const
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterString>(GetPlaybackParameterConst(Name)))
     {
@@ -192,7 +235,7 @@ FString UMTWPAudioInstance::GetParameterString(const FName& Name) const
     return FString();
 }
 
-bool UMTWPAudioInstance::GetParameterBoolean(const FName& Name) const
+bool UMTWPAudioInstance::GetParameterValueBoolean(const FName& Name) const
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterBoolean>(GetPlaybackParameterConst(Name)))
     {
@@ -204,9 +247,9 @@ bool UMTWPAudioInstance::GetParameterBoolean(const FName& Name) const
     return false;
 }
 
-UObject* UMTWPAudioInstance::GetParameterObjectPointer(const FName& Name) const
+UObject* UMTWPAudioInstance::GetParameterValueObjectPointer(const FName& Name) const
 {
-    if (auto Parameter = Cast<UMTWPPlaybackParameterObject>(GetPlaybackParameterConst(Name)))
+    if (auto Parameter = Cast<UMTWPPlaybackParameterObjectPointer>(GetPlaybackParameterConst(Name)))
     {
         return Parameter->GetValue();
     }
@@ -218,7 +261,7 @@ UObject* UMTWPAudioInstance::GetParameterObjectPointer(const FName& Name) const
 
 
 
-float UMTWPAudioInstance::GetPreviousParameterNumeric(const FName& Name) const
+float UMTWPAudioInstance::GetPreviousParameterValueNumeric(const FName& Name) const
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterNumeric>(GetPlaybackParameterConst(Name)))
     {
@@ -230,7 +273,7 @@ float UMTWPAudioInstance::GetPreviousParameterNumeric(const FName& Name) const
     return 0.f;
 }
 
-FString UMTWPAudioInstance::GetPreviousParameterString(const FName& Name) const
+FString UMTWPAudioInstance::GetPreviousParameterValueString(const FName& Name) const
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterString>(GetPlaybackParameterConst(Name)))
     {
@@ -242,7 +285,7 @@ FString UMTWPAudioInstance::GetPreviousParameterString(const FName& Name) const
     return FString();
 }
 
-bool UMTWPAudioInstance::GetPreviousParameterBoolean(const FName& Name) const
+bool UMTWPAudioInstance::GetPreviousParameterValueBoolean(const FName& Name) const
 {
     if (auto Parameter = Cast<UMTWPPlaybackParameterBoolean>(GetPlaybackParameterConst(Name)))
     {
@@ -254,9 +297,9 @@ bool UMTWPAudioInstance::GetPreviousParameterBoolean(const FName& Name) const
     return false;
 }
 
- UObject* UMTWPAudioInstance::GetPreviousParameterObjectPointer(const FName& Name) const
+ UObject* UMTWPAudioInstance::GetPreviousParameterValueObjectPointer(const FName& Name) const
 {
-    if (auto Parameter = Cast<UMTWPPlaybackParameterObject>(GetPlaybackParameterConst(Name)))
+    if (auto Parameter = Cast<UMTWPPlaybackParameterObjectPointer>(GetPlaybackParameterConst(Name)))
     {
         return Parameter->GetPreviousValue();
     }
@@ -265,6 +308,7 @@ bool UMTWPAudioInstance::GetPreviousParameterBoolean(const FName& Name) const
 
     return nullptr;
 }
+
 
  bool UMTWPAudioInstance::AddPlaybackParameter(UMTWPPlaybackParameter* InPlaybackParameter)
  {
@@ -286,7 +330,6 @@ bool UMTWPAudioInstance::GetPreviousParameterBoolean(const FName& Name) const
          return false;
      }
  }
-
 
 
  UMTWPPlaybackParameter* UMTWPAudioInstance::GetPlaybackParameter(const FName& Name)

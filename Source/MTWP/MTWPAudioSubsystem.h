@@ -26,6 +26,7 @@ inline FString ToString(UObject* Value)
     return Value ? Value->GetName() : TEXT("nullptr");
 }
 
+
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
 class MTWP_API UMTWPPlaybackParameter : public UObject
 {
@@ -170,7 +171,7 @@ protected:
 };
 
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
-class MTWP_API UMTWPPlaybackParameterObject : public UMTWPPlaybackParameter
+class MTWP_API UMTWPPlaybackParameterObjectPointer : public UMTWPPlaybackParameter
 {
 	GENERATED_BODY()
 
@@ -203,7 +204,22 @@ protected:
 	friend UMTWPAudioInterface;
 };
 
+UENUM(BlueprintType)
+enum class EMTWPPlayingStatus : uint8
+{
+	Init,
+	Playing,
+	Paused,
+	Destroying
+};
 
+UENUM(BlueprintType)
+enum class EMTWPPlayingType : uint8
+{
+	Flat,
+	AtLocation,
+	Attached
+};
 
 UCLASS(BlueprintType, Blueprintable)
 class MTWP_API UMTWPAudioInstance : public UObject
@@ -219,7 +235,7 @@ public:
 	virtual inline bool IsValidInstance() const { return true; }
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
-	virtual void Play() {};
+	virtual void Play();
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
 	virtual void Stop() {};
@@ -227,46 +243,65 @@ public:
 	//UFUNCTION(BlueprintCallable, Category = "AudioInstance")
 	//virtual void Pause() {};
 
+
 public:
 
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	inline EMTWPPlayingStatus GetPlayingStatus() const { return PlayingStatus; }
+
+
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Numeric")
-	virtual void SetParameterNumeric(const FName& Name, float Value);
+	void SetParameterValueNumeric(const FName& Name, float Value);
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | String")
-	virtual void SetParameterString(const FName& Name, const FString& Value);
+	void SetParameterValueString(const FName& Name, const FString& Value);
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Boolean")
-	virtual void SetParameterBoolean(FName Name, bool Value);
+	void SetParameterValueBoolean(FName Name, bool Value);
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Object pointer")
-	virtual void SetParameterObjectPointer(const FName& Name, UObject* Object);
+	void SetParameterValueObjectPointer(const FName& Name, UObject* Value);
 
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Numeric")
-	virtual float GetParameterNumeric(const FName& Name) const;
+	float GetParameterValueNumeric(const FName& Name) const;
 
     UFUNCTION(BlueprintCallable, Category = "AudioInstance | String")
-	virtual FString GetParameterString(const FName& Name) const;
+	FString GetParameterValueString(const FName& Name) const;
 
     UFUNCTION(BlueprintCallable, Category = "AudioInstance | Boolean")
-	virtual bool GetParameterBoolean(const FName& Name) const;
+	bool GetParameterValueBoolean(const FName& Name) const;
 
     UFUNCTION(BlueprintCallable, Category = "AudioInstance | Object pointer")
-	virtual UObject* GetParameterObjectPointer(const FName& Name) const;
+	UObject* GetParameterValueObjectPointer(const FName& Name) const;
 
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Numeric")
-	virtual float GetPreviousParameterNumeric(const FName& Name) const;
+	float GetPreviousParameterValueNumeric(const FName& Name) const;
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | String")
-	virtual FString GetPreviousParameterString(const FName& Name) const;
+	FString GetPreviousParameterValueString(const FName& Name) const;
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Boolean")
-	virtual bool GetPreviousParameterBoolean(const FName& Name) const;
+	bool GetPreviousParameterValueBoolean(const FName& Name) const;
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance | Object pointer")
-	virtual UObject* GetPreviousParameterObjectPointer(const FName& Name) const;
+	UObject* GetPreviousParameterValueObjectPointer(const FName& Name) const;
 
+	
+protected:
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric, float Value) { return false; }
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString, const FString& Value) { return false; }
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	virtual bool UpdateParameterBoolean(UMTWPPlaybackParameterBoolean* ParameterNumeric, bool Value) { return false; }
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
+	virtual bool UpdateParameterObjectPointer(UMTWPPlaybackParameterObjectPointer* ParameterNumeric, UObject* Value) { return false; }
 
 //public:
 //
@@ -285,6 +320,9 @@ public:
 	FPlaybackParameterChanged PlaybackParameterChanged;
 
 protected:
+
+	UFUNCTION(Category = "AudioInstance")
+	virtual inline bool UpdateParameter(const FName& Name) { return false; }
 
 	UFUNCTION(Category = "AudioInstance")
 	virtual void OnPlaybackParameterChanged(const FName& Name) {}
@@ -317,6 +355,12 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Playback Parameters")
 	TArray<UMTWPPlaybackParameter*> PlaybackParameters;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Playback Parameters")
+	EMTWPPlayingStatus PlayingStatus = EMTWPPlayingStatus::Init;
+
+	UPROPERTY(BlueprintReadWrite, Category = "Playback Parameters")
+	EMTWPPlayingType PlayingType = EMTWPPlayingType::Flat;
+
 
 	friend UMTWPAudioInterface;
 };
@@ -340,13 +384,19 @@ class MTWP_API UMTWPAudioInterface : public UObject
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
-	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false) { return nullptr; }
+	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false) { return nullptr; };
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
 	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) { return nullptr; }
 
-	//UFUNCTION(BlueprintCallable, Category = "AudioInterface")
-	//virtual UMTWPAudioInstance* CreateAudioInstanceAttached(UMTWPPlaybackContent* PlaybackContent, TArray<UMTWPPlaybackParameter*>& AudioParameters, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), EAttachmentRule AttachmentRule = EAttachmentRule::KeepRelative) = 0;
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	virtual UMTWPAudioInstance* CreateAudioInstanceAttached(UMTWPAudioEntity* InEntity, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), const EAttachmentRule& InAttachmentRule = EAttachmentRule::KeepRelative) { return nullptr; }
+
+protected:
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	virtual bool IsValidEntity(UMTWPAudioEntity* InEntity) const { return true; }
+
 };
 
 
@@ -361,5 +411,6 @@ class MTWP_API UMTWPAudioSubsystem : public UGameInstanceSubsystem
 public:
 
 	// TODO: Should be contained in array
+	UPROPERTY()
 	class UMTWPAudioInterface_WWise* WWiseAudioInterface;
 };

@@ -33,6 +33,12 @@ public:
 	UPROPERTY(EditDefaultsOnly, Instanced, Category = "Projectile | Audio")
 	TObjectPtr<UMTWPAudioEntity> AudioEntity;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+	TObjectPtr<UAkSwitchValue> SwitchMetal;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+	TObjectPtr<UAkSwitchValue> SwitchPlastic;
+
  // Audio
 //public:
 //

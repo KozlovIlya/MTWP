@@ -28,6 +28,10 @@ public:
 
 protected:
 
+	virtual void BeginDestroy() override;
+
+protected:
+
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<class UAkAudioEvent> Event;
 
@@ -37,7 +41,8 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	EAkCurveInterpolation CurveInterpolation = EAkCurveInterpolation::Linear;
 
-protected:
+// protected:
+public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AudioInstance | WWise")
 	TObjectPtr<class UAkComponent> Component = nullptr;
@@ -47,14 +52,13 @@ protected:
 
 protected:
 
-	virtual void OnPlaybackParameterChanged(const FName& Name);
+	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric, float InValue) override;
 
-private:
+	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString, const FString& InValue) override;
 
-	void UpdateRTPC(UMTWParameterPRTPC_WWise* RTPCParam);
+protected:
 
-	void UpdateSwitch(UMTWParameterSwitch_WWise* SwitchParam);
-
+	bool bPersistent = false;
 
 	friend UMTWPAudioInterface_WWise;
 };
@@ -78,31 +82,12 @@ class MTWP_API UMTWParameterPRTPC_WWise : public UMTWPPlaybackParameterNumeric
 };
 
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
-class MTWP_API UMTWParameterSwitch_WWise : public UMTWPPlaybackParameterObject
+class MTWP_API UMTWParameterSwitchGroup_WWise : public UMTWPPlaybackParameterString
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditDefaultsOnly)
-	FString SwitchGroup;
-
-	UPROPERTY(EditDefaultsOnly)
-	TObjectPtr<class UAkSwitchValue> SwitchValue = nullptr;
-
-	UPROPERTY()
-	TObjectPtr<class UAkSwitchValue> PreviousSwitchValue = nullptr;
-
-
-	UPROPERTY(EditDefaultsOnly)
-	uint32 InterpolationTimeMs = 0;
-
-	virtual inline UObject* GetValue() const override { return Cast<UObject>(SwitchValue); }
-
-	virtual inline UObject* GetPreviousValue() const override { return Cast<UObject>(PreviousSwitchValue); }
-
 	friend UMTWPAudioInterface_WWise;
 	friend UMTWPAudioInstance_WWise;
-
-	friend uint32 GetTypeHash(const UMTWParameterSwitch_WWise& Switch);
 };
 
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
@@ -110,7 +95,8 @@ class MTWP_API UMTWPAudioEntity_WWise : public UMTWPAudioEntity
 {
 	GENERATED_BODY()
 	
-protected:
+//protected:
+public:
 
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<class UAkAudioEvent> Event;
@@ -127,23 +113,11 @@ protected:
 	TArray<UMTWParameterPRTPC_WWise*> RTPCs;
 	
 	UPROPERTY(EditDefaultsOnly, Instanced)
-	TArray<UMTWParameterSwitch_WWise*> SwitchesSet;
+	TArray<UMTWParameterSwitchGroup_WWise*> Switches;
 
 	friend UMTWPAudioInterface_WWise;
 	friend UMTWPAudioInstance_WWise;
 };
-
-
-inline uint32 GetTypeHash(const UMTWParameterSwitch_WWise& Switch)
-{
-    return GetTypeHash(Switch.SwitchGroup);
-}
-
-inline uint32 GetTypeHash(const UMTWParameterPRTPC_WWise& Rtpc)
-{
-	return GetTypeHash(Rtpc.RtpcObject->GetShortID());
-}
-
 
 UCLASS(Blueprintable, BlueprintType)
 class MTWP_API UMTWPAudioInterface_WWise : public UMTWPAudioInterface
@@ -154,7 +128,15 @@ public:
 
 	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false) override;
 
-	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) override { return nullptr; }
+	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) override;
 
-	//virtual UMTWPAudioInstance* CreateAudioInstanceAttached(const UMTWPPlaybackParameters* AudioEntity, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), EAttachmentRule AttachmentRule = EAttachmentRule::KeepRelative) override;
+	virtual UMTWPAudioInstance* CreateAudioInstanceAttached(UMTWPAudioEntity* InEntity, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), const EAttachmentRule& InAttachmentRule = EAttachmentRule::KeepRelative) override;
+
+protected:
+
+	virtual bool IsValidEntity(UMTWPAudioEntity* InEntity) const override;
+
+protected:
+
+	void SetupParams(const UMTWPAudioEntity_WWise& InEntityChecked, UMTWPAudioInstance_WWise& InInstanceChecked);
 };
