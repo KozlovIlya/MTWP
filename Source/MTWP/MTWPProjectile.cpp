@@ -54,8 +54,8 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS) && IsValid(AS->WWiseAudioInterface))
 		{
 			//auto AI = AS->WWiseAudioInterface->CreateAudioInstanceAtLocation(AudioEntity, HitComp->GetComponentLocation());
-			//auto AI = AS->WWiseAudioInterface->CreateAudioInstance2D(AudioEntity);
-		    auto AI = AS->WWiseAudioInterface->CreateAudioInstanceAttached(AudioEntity, HitComp);
+			auto AI = AS->WWiseAudioInterface->CreateAudioInstance2D(AudioEntity);
+		    //auto AI = AS->WWiseAudioInterface->CreateAudioInstanceAttached(AudioEntity, HitComp);
 			if (IsValid(AI))
 			{
 				if (IsValid(OtherActor))

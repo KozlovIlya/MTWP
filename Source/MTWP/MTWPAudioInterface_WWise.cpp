@@ -51,12 +51,8 @@ void UMTWPAudioInstance_WWise::Play()
 		//		!!!bPersistent
 		//	);
 
-		if (bPersistent)
-		{
-			Component->SetStopWhenOwnerDestroyed(true);
-		}
-
 		PlayingID = Component->PostAkEvent(Event);
+
 
 		if (UNLIKELY(!!!PlayingID))
         {
@@ -85,12 +81,6 @@ void UMTWPAudioInstance_WWise::Stop()
 	{
 		PlayingStatus = EMTWPPlayingStatus::Init;
 	}
-}
-
-void UMTWPAudioInstance_WWise::BeginDestroy()
-{
-	// TODO: Stop if not bPersistent
-	Super::BeginDestroy();
 }
 
 bool UMTWPAudioInstance_WWise::UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* Parameter, float Value)
@@ -139,45 +129,54 @@ bool UMTWPAudioInstance_WWise::UpdateParameterString(UMTWPPlaybackParameterStrin
 	
 	if (UNLIKELY(!!!IsValid(Component)))
 	{
-		if (UNLIKELY(!!!Event.IsResolved()))
+
+		auto bWasPlaying = FAkAudioDevice::Get()->IsPlayingIDActive(Event->GetShortID(), PlayingID);
+
+		if (UNLIKELY(!!!FAkAudioDevice::Get()))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateSwitch: Event is not valid"));
+			UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateSwitch: FAkAudioDevice is not valid"));
 			return false;
 		}
-
-		bNeedToPlay = FAkAudioDevice::Get()->IsPlayingIDActive(Event->GetShortID(), PlayingID);
-
+		
 		// TODO: Learn more about spatial sound in WWise
 		// It's deprecated, but may be useful
 		//FAkAudioDevice::GetSpatialAudioListener();
 
-		// TODO: Need to contain 2D-sound listner somewhere.
-		Component = *FAkAudioDevice::Get()->GetDefaultListeners().begin();
-
-		if (UNLIKELY(!!!IsValid(Component)))
+		if (bWasPlaying)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: AudioComponent is not valid"));
+			FAkAudioDevice::Get()->ExecuteActionOnPlayingID(AkActionOnEventType::Stop, PlayingID, TransitionDurationMs, CurveInterpolation);
+			PlayingID = AK_INVALID_PLAYING_ID;
+		}
+
+		auto ListnerComponent = *FAkAudioDevice::Get()->GetDefaultListeners().begin();
+		Component = NewObject<UMTWPAudioComponent_WWise>();
+		if (UNLIKELY(!!!IsValid(Component) || !!!IsValid(ListnerComponent)))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::UpdateParameterStrig: AudioComponent is not valid"));
 			return false;
 		}
+
+		Component->RegisterComponentWithWorld(ListnerComponent->GetWorld());
+		Component->AttachToComponent(ListnerComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+		Component->OcclusionCollisionChannel = TEnumAsByte(EAkCollisionChannel::EAKCC_Camera);
+		Component->bPersistent = true; // only persistent sounds can be alive on this stage
+		Component->SetAutoDestroy(false);
 
 		for (auto Parameter : PlaybackParameters)
 		{
 			UpdateParameter(Parameter->GetName());
         }
-	}
 
-	if (UNLIKELY(!!!IsValid(Component)))
+		if (bNeedToPlay)
+		{
+			Play();
+		}
+	}
+	else
 	{
-        UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateSwitch: Component is not valid"));
-        return false;
+		// TODO: Add validation
+		Component->SetSwitch(nullptr, InParameter->GetName().ToString(), InValue);
 	}
-
-	Component->SetSwitch(nullptr, InParameter->GetName().ToString(), InValue);
-	if (bNeedToPlay)
-    {
-        Play();
-    }
-
 	return true;
 }
 
@@ -211,9 +210,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
     }
 
 	auto AudioInstance = NewObject<UMTWPAudioInstance_WWise>();
-	AudioInstance->bPersistent = bInPersistent;
 	AudioInstance->Event = InEventObject;
-
 
 	if (UNLIKELY(!!!IsValid(AudioInstance)))
     {
@@ -222,7 +219,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
     }
 
 	// TODO: Need to contain 2D-sound listner somewhere.
-	//AudioInstance->Component = NewObject<UAkComponent>(*FAkAudioDevice::Get()->GetDefaultListeners().begin());
+	//AudioInstance->Component = NewObject<UMTWPAudioComponent_WWise>(*FAkAudioDevice::Get()->GetDefaultListeners().begin());
 
 	if (UNLIKELY(!!!FAkAudioDevice::Get()->GetDefaultListeners().begin()))
 	{
@@ -231,7 +228,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
     }
 
 	auto ListnerComponent = *FAkAudioDevice::Get()->GetDefaultListeners().begin();
-	AudioInstance->Component = NewObject<UAkComponent>();
+	AudioInstance->Component = NewObject<UMTWPAudioComponent_WWise>();
 	//AudioInstance->Component = ListnerComponent;
 	if (UNLIKELY(!!!IsValid(AudioInstance->Component) || !!!IsValid(ListnerComponent)))
     {
@@ -241,8 +238,9 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
 
 	AudioInstance->Component->RegisterComponentWithWorld(ListnerComponent->GetWorld());
 	AudioInstance->Component->AttachToComponent(ListnerComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-	AudioInstance->Component->SetAutoDestroy(false);
 	AudioInstance->Component->OcclusionCollisionChannel = TEnumAsByte(EAkCollisionChannel::EAKCC_Camera);
+	AudioInstance->Component->bPersistent = bInPersistent;
+	AudioInstance->Component->SetAutoDestroy(false);
 
 	SetupParams(*InEntity_WWise, *AudioInstance);
 
@@ -324,7 +322,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstanceAttached(UMTWP
 
 	AudioInstance->Event = InEventObject;
 
-	AudioInstance->Component = NewObject<UAkComponent>(AudioInstance);
+	AudioInstance->Component = NewObject<UMTWPAudioComponent_WWise>(AudioInstance);
 	if (UNLIKELY(!!!IsValid(AudioInstance->Component)))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: AudioComponent is not valid"));

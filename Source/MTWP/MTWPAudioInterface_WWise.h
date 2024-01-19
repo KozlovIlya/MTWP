@@ -6,8 +6,31 @@
 
 #include <AkRtpc.h>
 #include <AkGameplayTypes.h>
+#include <AkComponent.h>
 
 #include "MTWPAudioInterface_WWise.generated.h"
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPAudioComponent_WWise : public UAkComponent
+{
+	GENERATED_BODY()
+
+	inline virtual void OnUnregister() override
+	{
+		if (!!!bPersistent)
+		{
+			Stop();
+        }
+
+		USceneComponent::OnUnregister();
+	}
+
+	UPROPERTY(EditDefaultsOnly)
+	bool bPersistent = false;
+
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
+};
 
 
 UCLASS(BlueprintType, Blueprintable)
@@ -28,10 +51,6 @@ public:
 
 protected:
 
-	virtual void BeginDestroy() override;
-
-protected:
-
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<class UAkAudioEvent> Event;
 
@@ -45,7 +64,7 @@ protected:
 public:
 
 	UPROPERTY(EditDefaultsOnly, Category = "AudioInstance | WWise")
-	TObjectPtr<class UAkComponent> Component = nullptr;
+	TObjectPtr<class UMTWPAudioComponent_WWise> Component = nullptr;
 
 	UPROPERTY(BlueprintReadOnly, Category = "AudioInstance | WWise")
 	int PlayingID = 0;
@@ -57,8 +76,6 @@ protected:
 	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString, const FString& InValue) override;
 
 protected:
-
-	bool bPersistent = false;
 
 	friend UMTWPAudioInterface_WWise;
 };
@@ -77,8 +94,6 @@ class MTWP_API UMTWParameterPRTPC_WWise : public UMTWPPlaybackParameterNumeric
 
 	friend UMTWPAudioInterface_WWise;
 	friend UMTWPAudioInstance_WWise;
-
-	friend uint32 GetTypeHash(const UMTWParameterPRTPC_WWise& Rtpc);
 };
 
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
