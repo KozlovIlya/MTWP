@@ -141,6 +141,11 @@
 										<Value>-70</Value>
 									</ValueList>
 								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-9</Value>
+									</ValueList>
+								</Property>
 							</PropertyList>
 							<ReferenceList>
 								<Reference Name="Conversion">
@@ -298,6 +303,242 @@
 								<SwitchRef Name="Metal" ID="{857A4BC8-E5F1-46AE-8E10-67AE5F7514C7}"/>
 								<ItemList>
 									<ItemRef Name="projectilehit_metal" ID="{DDD0B851-7C1A-4204-905F-7BE327EEB80A}"/>
+								</ItemList>
+							</Grouping>
+						</GroupingList>
+					</GroupingInfo>
+				</SwitchContainer>
+				<SwitchContainer Name="AmbientCharacterSwitch" ID="{CB33D677-C607-491B-B1DA-5B8D7DE656DC}" ShortID="202204179">
+					<PropertyList>
+						<Property Name="ListenerRelativeRouting" Type="bool" Value="False"/>
+						<Property Name="Volume" Type="Real64">
+							<ValueList>
+								<Value>-7</Value>
+							</ValueList>
+						</Property>
+					</PropertyList>
+					<ReferenceList>
+						<Reference Name="Conversion">
+							<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CBBAF723-F0CB-45C7-86B8-F797C092D8D2}"/>
+						</Reference>
+						<Reference Name="DefaultSwitchOrState">
+							<ObjectRef Name="Calm" ID="{29DDF475-7233-45C3-B72D-1CC78AA22066}" WorkUnitID="{98D53746-7239-433B-899D-E6A22B5CD2F3}"/>
+						</Reference>
+						<Reference Name="OutputBus">
+							<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{DBC99DF0-EB96-4776-B624-B573924C9329}"/>
+						</Reference>
+						<Reference Name="SwitchGroupOrStateGroup">
+							<ObjectRef Name="Character" ID="{266BE4A3-DE73-4BD7-9A11-5DC4B6E2D3D8}" WorkUnitID="{98D53746-7239-433B-899D-E6A22B5CD2F3}"/>
+						</Reference>
+					</ReferenceList>
+					<ChildrenList>
+						<Sound Name="ambient_calm" ID="{A41F5EF0-931F-4561-B79D-0FED4888F2A2}" ShortID="399947613">
+							<PropertyList>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Lowpass" Type="int16">
+									<ValueList>
+										<Value>80</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Pitch" Type="int32">
+									<ValueList>
+										<Value>-2400</Value>
+									</ValueList>
+								</Property>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-1</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CBBAF723-F0CB-45C7-86B8-F797C092D8D2}"/>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{DBC99DF0-EB96-4776-B624-B573924C9329}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<SourcePlugin Name="Low white noise" ID="{47CE24E3-1D5B-4B76-88F9-5583969D413B}" ShortID="838625008" PluginName="Wwise Tone Generator" CompanyID="0" PluginID="102">
+									<PropertyList>
+										<Property Name="AttackTime" Type="Real32" Value="2.5"/>
+										<Property Name="FixDur" Type="Real32" Value="5"/>
+										<Property Name="WaveType" Type="int32" Value="4"/>
+									</PropertyList>
+									<Language>SFX</Language>
+								</SourcePlugin>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Low white noise" ID="{47CE24E3-1D5B-4B76-88F9-5583969D413B}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+						<Sound Name="ambient_nervous" ID="{CE96A73B-E7CB-4A9C-988F-7B9AC0092A29}" ShortID="780343431">
+							<PropertyList>
+								<Property Name="BypassEffect0" Type="bool">
+									<ValueList>
+										<Value>True</Value>
+									</ValueList>
+								</Property>
+								<Property Name="IsLoopingEnabled" Type="bool" Value="True"/>
+								<Property Name="Lowpass" Type="int16">
+									<ValueList>
+										<Value>50</Value>
+									</ValueList>
+								</Property>
+								<Property Name="OverrideEffect" Type="bool" Value="True"/>
+								<Property Name="Volume" Type="Real64">
+									<ValueList>
+										<Value>-13</Value>
+									</ValueList>
+								</Property>
+							</PropertyList>
+							<ReferenceList>
+								<Reference Name="Conversion">
+									<ObjectRef Name="Default Conversion Settings" ID="{6D1B890C-9826-4384-BF07-C15223E9FB56}" WorkUnitID="{CBBAF723-F0CB-45C7-86B8-F797C092D8D2}"/>
+								</Reference>
+								<Reference Name="Effect0">
+									<Custom>
+										<Effect Name="Tremolo (Custom)" ID="{71DAFCE5-677E-4EE1-A513-90728BF871DA}" ShortID="610884552" PluginName="Wwise Tremolo" CompanyID="0" PluginID="131" PluginType="3">
+											<PropertyList>
+												<Property Name="ModDepth" Type="Real32" Value="23.1"/>
+												<Property Name="ModFrequency" Type="Real32" Value="18.98"/>
+												<Property Name="ModPWM" Type="Real32" Value="25"/>
+												<Property Name="ModSmoothing" Type="Real32" Value="100"/>
+												<Property Name="OutputGain" Type="Real32" Value="-1"/>
+											</PropertyList>
+										</Effect>
+									</Custom>
+								</Reference>
+								<Reference Name="Effect1">
+									<Custom>
+										<Effect Name="Compressor (Custom)" ID="{0F9CA5AE-4E12-4662-9BD2-0B8BC1011C07}" ShortID="641370251" PluginName="Wwise Compressor" CompanyID="0" PluginID="108" PluginType="3">
+											<PropertyList>
+												<Property Name="Ratio" Type="Real32" Value="1.2"/>
+												<Property Name="ReleaseTime" Type="Real32" Value="0.25"/>
+												<Property Name="Threshold" Type="Real32" Value="-73.5"/>
+											</PropertyList>
+										</Effect>
+									</Custom>
+								</Reference>
+								<Reference Name="Effect2">
+									<Custom>
+										<Effect Name="Guitar Distortion (Custom)" ID="{6FCF04AC-82A5-492F-84CF-F4898C0871FA}" ShortID="892661683" PluginName="Wwise Guitar Distortion" CompanyID="0" PluginID="126" PluginType="3">
+											<PropertyList>
+												<Property Name="DistortionDrive" Type="Real32" Value="100"/>
+												<Property Name="DistortionType" Type="int32" Value="2"/>
+												<Property Name="PreEQBand1Enable" Type="bool" Value="True"/>
+												<Property Name="PreEQBand1FilterType" Type="int32" Value="3"/>
+												<Property Name="PreEQBand1Frequency" Type="Real32" Value="54"/>
+											</PropertyList>
+										</Effect>
+									</Custom>
+								</Reference>
+								<Reference Name="Effect3">
+									<Custom>
+										<Effect Name="RoomVerb (Custom)" ID="{94E36BB3-6C46-4190-82BF-FC83EC8C8F5A}" ShortID="749359177" PluginName="Wwise RoomVerb" CompanyID="0" PluginID="118" PluginType="3">
+											<PropertyList>
+												<Property Name="DecayTime" Type="Real32" Value="1.5"/>
+												<Property Name="Density" Type="Real32" Value="52"/>
+												<Property Name="DryLevel" Type="Real32" Value="-18.3"/>
+												<Property Name="ERPattern" Type="int32" Value="1"/>
+												<Property Name="EnableToneControls" Type="bool" Value="True"/>
+												<Property Name="Filter1Curve" Type="int32" Value="1"/>
+												<Property Name="Filter1Gain" Type="Real32" Value="16.5"/>
+												<Property Name="HFDamping" Type="Real32" Value="7.4"/>
+												<Property Name="PreDelay" Type="Real32" Value="0"/>
+												<Property Name="ReverbLevel" Type="Real32" Value="-15"/>
+												<Property Name="RoomShape" Type="Real32" Value="7"/>
+											</PropertyList>
+										</Effect>
+									</Custom>
+								</Reference>
+								<Reference Name="OutputBus">
+									<ObjectRef Name="Master Audio Bus" ID="{1514A4D8-1DA6-412A-A17E-75CA0C2149F3}" WorkUnitID="{DBC99DF0-EB96-4776-B624-B573924C9329}"/>
+								</Reference>
+							</ReferenceList>
+							<ChildrenList>
+								<SourcePlugin Name="Synth One" ID="{71A54E84-72EA-47E5-8CA4-77A9B455ACD4}" ShortID="1063353769" PluginName="Wwise Synth One" CompanyID="0" PluginID="148">
+									<PropertyList>
+										<Property Name="BaseFrequency" Type="Real32" Value="179"/>
+										<Property Name="FmAmount" Type="Real32" Value="6.3"/>
+										<Property Name="Osc1Level" Type="Real32" Value="-1"/>
+										<Property Name="Osc1Pwm" Type="Real32" Value="54"/>
+										<Property Name="Osc1Transpose" Type="int32" Value="189"/>
+									</PropertyList>
+									<ObjectLists>
+										<ObjectList Name="RTPC">
+											<Reference>
+												<Local>
+													<RTPC Name="" ID="{EE7760E0-B6D4-4CAD-99A9-A9B4DAE56B1B}" ShortID="206846726">
+														<PropertyList>
+															<Property Name="PropertyName" Type="string" Value="OutputLevel"/>
+														</PropertyList>
+														<ReferenceList>
+															<Reference Name="ControlInput">
+																<Custom>
+																	<ModulatorEnvelope Name="Modulator Envelope (Custom)" ID="{AC163495-DCCA-493A-9962-87CAD1F335CC}" ShortID="554986779">
+																		<PropertyList>
+																			<Property Name="EnvelopeAttackTime" Type="Real64" Value="0.01"/>
+																		</PropertyList>
+																	</ModulatorEnvelope>
+																</Custom>
+															</Reference>
+															<Reference Name="Curve">
+																<Custom>
+																	<Curve Name="" ID="{662DC279-042B-4C12-98EC-7CA16C26349A}">
+																		<PropertyList>
+																			<Property Name="Flags" Type="int32" Value="3"/>
+																		</PropertyList>
+																		<PointList>
+																			<Point>
+																				<XPos>0</XPos>
+																				<YPos>-96</YPos>
+																				<Flags>21</Flags>
+																			</Point>
+																			<Point>
+																				<XPos>1</XPos>
+																				<YPos>0</YPos>
+																				<Flags>53</Flags>
+																			</Point>
+																		</PointList>
+																	</Curve>
+																</Custom>
+															</Reference>
+														</ReferenceList>
+													</RTPC>
+												</Local>
+											</Reference>
+										</ObjectList>
+									</ObjectLists>
+									<Language>SFX</Language>
+								</SourcePlugin>
+							</ChildrenList>
+							<ActiveSourceList>
+								<ActiveSource Name="Synth One" ID="{71A54E84-72EA-47E5-8CA4-77A9B455ACD4}" Platform="Linked"/>
+							</ActiveSourceList>
+						</Sound>
+					</ChildrenList>
+					<GroupingInfo>
+						<GroupingBehaviorList>
+							<GroupingBehavior>
+								<ItemRef Name="ambient_nervous" ID="{CE96A73B-E7CB-4A9C-988F-7B9AC0092A29}"/>
+							</GroupingBehavior>
+							<GroupingBehavior>
+								<ItemRef Name="ambient_calm" ID="{A41F5EF0-931F-4561-B79D-0FED4888F2A2}"/>
+							</GroupingBehavior>
+						</GroupingBehaviorList>
+						<GroupingList>
+							<Grouping>
+								<SwitchRef Name="Calm" ID="{29DDF475-7233-45C3-B72D-1CC78AA22066}"/>
+								<ItemList>
+									<ItemRef Name="ambient_nervous" ID="{CE96A73B-E7CB-4A9C-988F-7B9AC0092A29}"/>
+								</ItemList>
+							</Grouping>
+							<Grouping>
+								<SwitchRef Name="Nervous" ID="{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"/>
+								<ItemList>
+									<ItemRef Name="ambient_calm" ID="{A41F5EF0-931F-4561-B79D-0FED4888F2A2}"/>
 								</ItemList>
 							</Grouping>
 						</GroupingList>

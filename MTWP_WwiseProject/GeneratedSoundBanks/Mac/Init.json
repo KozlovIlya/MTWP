@@ -10,7 +10,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{8532C273-6622-2C4B-F688-7E26005BEC33}",
+    "Hash": "{CF91E30F-0000-D67D-8216-4C66B9EABC55}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -52,6 +52,26 @@
     ],
     "SwitchGroups": [
      {
+      "Id": "436743010",
+      "Name": "Character",
+      "ObjectPath": "\\Switches\\Default Work Unit\\Character",
+      "GUID": "{266BE4A3-DE73-4BD7-9A11-5DC4B6E2D3D8}",
+      "Switches": [
+       {
+        "Id": "1717373301",
+        "Name": "Nervous",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Character\\Nervous",
+        "GUID": "{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"
+       },
+       {
+        "Id": "3753286132",
+        "Name": "Calm",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Character\\Calm",
+        "GUID": "{29DDF475-7233-45C3-B72D-1CC78AA22066}"
+       }
+      ]
+     },
+     {
       "Id": "1834394558",
       "Name": "Surface",
       "ObjectPath": "\\Switches\\Default Work Unit\\Surface",
@@ -74,6 +94,6 @@
     ]
    }
   ],
-  "FileHash": "{1295C214-1679-AF10-92D4-522B2F40A9A7}"
+  "FileHash": "{FE13C96B-02A3-EB03-C044-27944CF95634}"
  }
 }

@@ -1,15 +1,32 @@
 Event	ID	Name			Wwise Object Path	Notes
+	1562304622	Play_Ambient			\Default Work Unit\Play_Ambient	
 	2960666077	Play_Hit			\Default Work Unit\Play_Hit	
 
 Switch Group	ID	Name			Wwise Object Path	Notes
+	436743010	Character			\Default Work Unit\Character	
 	1834394558	Surface			\Default Work Unit\Surface	
 
 Switch	ID	Name	Switch Group			Notes
+	1717373301	Nervous	Character			
+	3753286132	Calm	Character			
 	660835419	Plastic	Surface			
 	2473969246	Metal	Surface			
 
 Game Parameter	ID	Name			Wwise Object Path	Notes
 	2726366691	HitPower			\Default Work Unit\HitPower	
+
+Modulator Envelope	ID	Name			Wwise Object Path	Notes
+	554986779	Modulator Envelope (Custom)				
+
+Effect plug-ins	ID	Name	Type				Notes
+	610884552	Tremolo (Custom)	Wwise Tremolo			
+	641370251	Compressor (Custom)	Wwise Compressor			
+	749359177	RoomVerb (Custom)	Wwise RoomVerb			
+	892661683	Guitar Distortion (Custom)	Wwise Guitar Distortion			
+
+Source plug-ins	ID	Name	Type		Wwise Object Path	Notes
+	838625008	Low white noise	Wwise Tone Generator		\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_calm\Low white noise	
+	1063353769	Synth One	Wwise Synth One		\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_nervous\Synth One	
 
 In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
 	816428177	projectilehit_plastic	C:\Users\MercuryOcean\Documents\tmp\MTWP\MTWP_WwiseProject\.cache\Windows\SFX\projectilehit_plastic_10C4C929.wem		\Actor-Mixer Hierarchy\Default Work Unit\HitSurfaceSwitch\projectilehit_plastic		168036

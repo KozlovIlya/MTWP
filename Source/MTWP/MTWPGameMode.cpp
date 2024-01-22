@@ -25,6 +25,7 @@ void AMTWPGameMode::BeginPlay()
 			if (!!!IsValid(GI->AmbientAudioInstance))
 			{
 				GI->AmbientAudioInstance = AS->WWiseAudioInterface->CreateAudioInstance2D(GI->AmbientAudioEntity, true);
+				GI->AmbientAudioInstance->SetParameterValueString("Character", FMath::RandBool() ? "Nervous" : "Calm");
 				GI->AmbientAudioInstance->Play();
 			}
 		}
