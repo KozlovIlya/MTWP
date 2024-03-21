@@ -7,6 +7,7 @@
 #include "Components/CapsuleComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
+#include "Kismet/GameplayStatics.h" 
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -75,6 +76,7 @@ void AMTWPCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInpu
 
 void AMTWPCharacter::Move(const FInputActionValue& Value)
 {
+	UGameplayStatics::OpenLevel(this, FName(*GetWorld()->GetName()), false);
 	// input is a Vector2D
 	FVector2D MovementVector = Value.Get<FVector2D>();
 

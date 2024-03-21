@@ -71,9 +71,9 @@ public:
 
 protected:
 
-	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric, float InValue) override;
+	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric) override;
 
-	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString, const FString& InValue) override;
+	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString) override;
 
 protected:
 

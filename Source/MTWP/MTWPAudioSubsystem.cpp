@@ -77,135 +77,134 @@ void UMTWPAudioInstance::Play()
 
 void UMTWPAudioInstance::SetParameterValueNumeric(const FName& Name, float Value)
 {
-    if (auto Parameter = Cast<UMTWPPlaybackParameterNumeric>(GetPlaybackParameter(Name)); IsValid(Parameter))
-    {       
-        if (Parameter->IsValidValue(Value))
+    auto Parameter = Cast<UMTWPPlaybackParameterNumeric>(GetPlaybackParameter(Name));
+    
+    if (UNLIKELY(!!!IsValid(Parameter)))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type Numeri."), *Name.ToString());
+        return;
+    }
+
+    if (UNLIKELY(!!!Parameter->IsValidValue(Value)))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Value %f is not valid for parameter %s"), Value, *Name.ToString());
+        return;
+    }
+    
+    if (Parameter->Value != Value)
+    {
+        auto TempPreviousValue = Parameter->PreviousValue;
+        Parameter->PreviousValue = Parameter->Value;
+        Parameter->Value = Value;
+
+        if (LIKELY(UpdateParameterNumeric(Parameter)))
         {
-            if (Parameter->Value != Value)
-            {
-                if (UpdateParameterNumeric(Parameter, Value))
-                {
-                    Parameter->PreviousValue = Parameter->Value;
-                    Parameter->Value = Value;
-                    PlaybackParameterChanged.Broadcast(Name);
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %f"), *Name.ToString(), Value);
-                }
-            }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Value %f is already set for parameter %s"), Value, *Name.ToString());
-            }
+            PlaybackParameterChanged.Broadcast(Name);
         }
         else
         {
-            UE_LOG(LogTemp, Warning, TEXT("Value %f is not valid for parameter %s"), Value, *Name.ToString());
+            Parameter->Value = Parameter->PreviousValue;
+            Parameter->PreviousValue = TempPreviousValue;
+            UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %f"), *Name.ToString(), Value);
         }
     }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type Numeri."), *Name.ToString());
-    }
-    
 }
 
 void UMTWPAudioInstance::SetParameterValueString(const FName& Name, const FString& Value)
 {
-    if (auto Parameter = Cast<UMTWPPlaybackParameterString>(GetPlaybackParameter(Name)); IsValid(Parameter))
+    auto Parameter = Cast<UMTWPPlaybackParameterString>(GetPlaybackParameter(Name));
+    
+    if (UNLIKELY(!!!IsValid(Parameter)))
     {
-        if (Parameter->IsValidValue(Value))
+        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type String."), *Name.ToString());
+        return;
+    }
+    
+    if (!!!Parameter->IsValidValue(Value))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Value %s is not valid for parameter %s"), *Value, *Name.ToString());
+        return;
+    }
+    
+    if (Parameter->Value != Value)
+    {
+        auto TempPreviousValue = Parameter->PreviousValue;
+        Parameter->PreviousValue = Parameter->Value;
+        Parameter->Value = Value;
+
+        if (LIKELY(UpdateParameterString(Parameter)))
         {
-            if (Parameter->Value != Value)
-            {
-                if (UpdateParameterString(Parameter, Value))
-                {
-                    Parameter->PreviousValue = Parameter->Value;
-                    Parameter->Value = Value;
-                    PlaybackParameterChanged.Broadcast(Name);
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %s"), *Name.ToString(), *Value);
-                }
-            }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Value %s is already set for parameter %s"), *Value, *Name.ToString());
-            }
+            PlaybackParameterChanged.Broadcast(Name);
         }
         else
         {
-            UE_LOG(LogTemp, Warning, TEXT("Value %s is not valid for parameter %s"), *Value, *Name.ToString());
+            Parameter->Value = Parameter->PreviousValue;
+            Parameter->PreviousValue = TempPreviousValue;
+            UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %s"), *Name.ToString(), *Value);
         }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type String."), *Name.ToString());
     }
 }
 
 void UMTWPAudioInstance::SetParameterValueBoolean(FName Name, bool Value)
 {
-    if (auto Parameter = Cast<UMTWPPlaybackParameterBoolean>(GetPlaybackParameter(Name)); IsValid(Parameter))
+    auto Parameter = Cast<UMTWPPlaybackParameterBoolean>(GetPlaybackParameter(Name));
+    
+    if (!!!IsValid(Parameter))
     {
-        if (Parameter->Value != Value)
+        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type Boolean."), *Name.ToString());
+        return;
+    }
+    
+    if (Parameter->Value != Value)
+    {
+        auto TempPreviousValue = Parameter->PreviousValue;
+        Parameter->PreviousValue = Parameter->Value;
+        Parameter->Value = Value;
+
+        if (LIKELY(UpdateParameterBoolean(Parameter)))
         {
-            if (UpdateParameterBoolean(Parameter, Value))
-            {
-                Parameter->PreviousValue = Parameter->Value;
-                Parameter->Value = Value;
-                PlaybackParameterChanged.Broadcast(Name);
-            }
-            else
-            {
-                UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %d"), *Name.ToString(), Value);
-            }
+            Parameter->PreviousValue = Parameter->Value;
+            Parameter->Value = Value;
+            PlaybackParameterChanged.Broadcast(Name);
         }
         else
         {
-            UE_LOG(LogTemp, Warning, TEXT("Value %d is already set for parameter %s"), Value, *Name.ToString());
+            Parameter->Value = Parameter->PreviousValue;
+            Parameter->PreviousValue = TempPreviousValue;
+            UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %d"), *Name.ToString(), Value);
         }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type Boolean."), *Name.ToString());
     }
 }
 
 void UMTWPAudioInstance::SetParameterValueObjectPointer(const FName& InName, UObject* Value)
 {
-    if (auto Parameter = Cast<UMTWPPlaybackParameterObjectPointer>(GetPlaybackParameter(InName)))
+    auto Parameter = Cast<UMTWPPlaybackParameterObjectPointer>(GetPlaybackParameter(InName));
+
+    if (UNLIKELY(!!!IsValid(Parameter)))
     {
-        if (Parameter->IsValidValue(Value))
+        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type ObjectPointer."), *InName.ToString());
+        return;
+    }
+    
+    if (UNLIKELY(!!!Parameter->IsValidValue(Value)))
+    {
+        if (Parameter->GetValue() != Value)
         {
-            if (Parameter->GetValue() != Value)
+            auto TempPreviousValue = Parameter->GetPreviousValue();
+            Parameter->SetPreviousValue(Parameter->GetValue());
+            Parameter->SetValue(Value);
+
+            if (LIKELY(UpdateParameterObjectPointer(Parameter)))
             {
-                if (UpdateParameterObjectPointer(Parameter, Value))
-                {
-                    Parameter->SetPreviousValue(Parameter->GetValue());
-                    Parameter->SetValue(Value);
-                    PlaybackParameterChanged.Broadcast(InName);
-                }
-                else
-                {
-                    UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %s"), *InName.ToString(), *Value->GetName());
-                }
+                PlaybackParameterChanged.Broadcast(InName);
             }
             else
             {
-                UE_LOG(LogTemp, Warning, TEXT("Value %s is already set for parameter %s"), *Value->GetName(), *InName.ToString());
+                Parameter->SetValue(Parameter->GetPreviousValue());
+                Parameter->SetPreviousValue(TempPreviousValue);
+                UE_LOG(LogTemp, Warning, TEXT("Failed to update parameter %s with value %s"), *InName.ToString(), *Value->GetName());
             }
         }
-        else
-        {
-            UE_LOG(LogTemp, Warning, TEXT("Value %s is not valid for parameter %s"), IsValid(Value) ? (char*)*Value->GetName() : "NULL", *InName.ToString());
-        }
-    }
-    else
-    {
-        UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s type ObjectPointer."), *InName.ToString());
     }
 }
 
@@ -309,6 +308,32 @@ bool UMTWPAudioInstance::GetPreviousParameterValueBoolean(const FName& Name) con
     return nullptr;
 }
 
+
+ inline bool UMTWPAudioInstance::UpdateParameter(const FName& Name)
+ {
+     if (auto Parameter = GetPlaybackParameter(Name))
+     {
+         switch (Parameter->GetType())
+         {
+         case EMTWPPlaybackParameterType::Numeric:
+             return UpdateParameterNumeric(Cast<UMTWPPlaybackParameterNumeric>(Parameter));
+         case EMTWPPlaybackParameterType::String:
+             return UpdateParameterString(Cast<UMTWPPlaybackParameterString>(Parameter));
+         case EMTWPPlaybackParameterType::Boolean:
+             return UpdateParameterBoolean(Cast<UMTWPPlaybackParameterBoolean>(Parameter));
+         case EMTWPPlaybackParameterType::ObjectPointer:
+             return UpdateParameterObjectPointer(Cast<UMTWPPlaybackParameterObjectPointer>(Parameter));
+         default:
+             UE_LOG(LogTemp, Warning, TEXT("Parameter type %s is not supported."));
+             return false;
+         }
+     }
+     else
+     {
+         UE_LOG(LogTemp, Warning, TEXT("No parameter with the name %s."), *Name.ToString());
+         return false;
+     }
+ }
 
  bool UMTWPAudioInstance::AddPlaybackParameter(UMTWPPlaybackParameter* InPlaybackParameter)
  {

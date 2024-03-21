@@ -27,6 +27,16 @@ inline FString ToString(UObject* Value)
 }
 
 
+UENUM(BlueprintType)
+enum class EMTWPPlaybackParameterType : uint8
+{
+	None,
+	Numeric,
+    String,
+    Boolean,
+    ObjectPointer
+};
+
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
 class MTWP_API UMTWPPlaybackParameter : public UObject
 {
@@ -36,6 +46,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FName GetName() const { return Name; }
+
+	UFUNCTION(BlueprintCallable)
+	virtual EMTWPPlaybackParameterType GetType() const { return EMTWPPlaybackParameterType::None; }
 
 protected:
 
@@ -55,6 +68,10 @@ class MTWP_API UMTWPPlaybackParameterNumeric : public UMTWPPlaybackParameter
 	using SetValueType = float;
 
 	const float DefaultValue = 0.f;
+
+public:
+
+	virtual EMTWPPlaybackParameterType GetType() const override { return EMTWPPlaybackParameterType::Numeric; }
 
 public:
 	
@@ -99,6 +116,10 @@ class MTWP_API UMTWPPlaybackParameterString : public UMTWPPlaybackParameter
 
 public:
 
+	virtual EMTWPPlaybackParameterType GetType() const override { return EMTWPPlaybackParameterType::String; }
+
+public:
+
 	UFUNCTION(BlueprintCallable, Category = "PlaybackParameter")
 	virtual inline bool IsValidValue(const FString& InValue) const { return !!!InValue.IsEmpty(); }
 
@@ -137,6 +158,10 @@ class MTWP_API UMTWPPlaybackParameterBoolean : public UMTWPPlaybackParameter
 	using SetValueType = bool;
 
 	const bool DefaultValue = false;
+
+public:
+
+	virtual EMTWPPlaybackParameterType GetType() const override { return EMTWPPlaybackParameterType::Boolean; }
 
 public:
 
@@ -179,6 +204,10 @@ class MTWP_API UMTWPPlaybackParameterObjectPointer : public UMTWPPlaybackParamet
 	using SetValueType = UObject*;
 
 	const UObject* DefaultValue = nullptr;
+
+public:
+
+	virtual EMTWPPlaybackParameterType GetType() const override { return EMTWPPlaybackParameterType::ObjectPointer; }
 
 public:
 
@@ -292,16 +321,16 @@ public:
 protected:
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
-	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric, float Value) { return false; }
+	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric) { return false; }
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
-	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString, const FString& Value) { return false; }
+	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString) { return false; }
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
-	virtual bool UpdateParameterBoolean(UMTWPPlaybackParameterBoolean* ParameterNumeric, bool Value) { return false; }
+	virtual bool UpdateParameterBoolean(UMTWPPlaybackParameterBoolean* ParameterNumeric) { return false; }
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInstance")
-	virtual bool UpdateParameterObjectPointer(UMTWPPlaybackParameterObjectPointer* ParameterNumeric, UObject* Value) { return false; }
+	virtual bool UpdateParameterObjectPointer(UMTWPPlaybackParameterObjectPointer* ParameterNumeric) { return false; }
 
 //public:
 //
@@ -322,7 +351,7 @@ public:
 protected:
 
 	UFUNCTION(Category = "AudioInstance")
-	virtual inline bool UpdateParameter(const FName& Name) { return false; }
+	virtual inline bool UpdateParameter(const FName& Name);
 
 	UFUNCTION(Category = "AudioInstance")
 	virtual void OnPlaybackParameterChanged(const FName& Name) {}

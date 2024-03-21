@@ -83,7 +83,7 @@ void UMTWPAudioInstance_WWise::Stop()
 	}
 }
 
-bool UMTWPAudioInstance_WWise::UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* Parameter, float Value)
+bool UMTWPAudioInstance_WWise::UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* Parameter)
 {
 	auto RTPCParam = Cast<UMTWParameterPRTPC_WWise>(Parameter);
 	if (!!!IsValid(RTPCParam) || !!!IsValid(RTPCParam->RtpcObject) || !!!FAkAudioDevice::Get())
@@ -98,7 +98,7 @@ bool UMTWPAudioInstance_WWise::UpdateParameterNumeric(UMTWPPlaybackParameterNume
     {
 		if (auto* SoundEngine = IWwiseSoundEngineAPI::Get(); LIKELY(SoundEngine))
 		{
-			Result = SoundEngine->SetRTPCValue(RTPCParam->RtpcObject->GetShortID(), Value, Component->GetAkGameObjectID(), RTPCParam->InterpolationTimeMs);
+			Result = SoundEngine->SetRTPCValue(RTPCParam->RtpcObject->GetShortID(), RTPCParam->Value, Component->GetAkGameObjectID(), RTPCParam->InterpolationTimeMs);
 		}
         else
         {
@@ -123,13 +123,10 @@ bool UMTWPAudioInstance_WWise::UpdateParameterNumeric(UMTWPPlaybackParameterNume
 
 }
 
-bool UMTWPAudioInstance_WWise::UpdateParameterString(UMTWPPlaybackParameterString* InParameter, const FString& InValue)
-{
-	bool bNeedToPlay = false;
-	
+bool UMTWPAudioInstance_WWise::UpdateParameterString(UMTWPPlaybackParameterString* InParameter)
+{	
 	if (UNLIKELY(!!!IsValid(Component)))
 	{
-
 		auto bWasPlaying = FAkAudioDevice::Get()->IsPlayingIDActive(Event->GetShortID(), PlayingID);
 
 		if (UNLIKELY(!!!FAkAudioDevice::Get()))
@@ -167,7 +164,7 @@ bool UMTWPAudioInstance_WWise::UpdateParameterString(UMTWPPlaybackParameterStrin
 			UpdateParameter(Parameter->GetName());
         }
 
-		if (bNeedToPlay)
+		if (bWasPlaying)
 		{
 			Play();
 		}
@@ -175,7 +172,7 @@ bool UMTWPAudioInstance_WWise::UpdateParameterString(UMTWPPlaybackParameterStrin
 	else
 	{
 		// TODO: Add validation
-		Component->SetSwitch(nullptr, InParameter->GetName().ToString(), InValue);
+		Component->SetSwitch(nullptr, InParameter->GetName().ToString(), InParameter->GetValue());
 	}
 	return true;
 }
@@ -243,7 +240,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
 	AudioInstance->Component->SetAutoDestroy(false);
 
 	SetupParams(*InEntity_WWise, *AudioInstance);
-
+	
 	return AudioInstance;
 }
 
@@ -409,4 +406,17 @@ void UMTWPAudioInterface_WWise::SetupParams(const UMTWPAudioEntity_WWise& InEnti
 		}
 		InInstanceChecked.AddPlaybackParameter(Switch);
 	}
+
+	FWorldDelegates::OnWorldCleanup.AddLambda([Instance = &InInstanceChecked](UWorld* World, bool bSessionEnded, bool bCleanupResources)
+		{
+			if (IsValid(Instance) && IsValid(Instance->Component))
+			{
+				if (bCleanupResources)
+				{
+					Instance->Component->DestroyComponent();
+					Instance->Component = nullptr;
+				}
+			}
+		});
+
 }
