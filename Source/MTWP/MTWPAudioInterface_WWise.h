@@ -25,13 +25,14 @@ class MTWP_API UMTWPAudioComponent_WWise : public UAkComponent
 		USceneComponent::OnUnregister();
 	}
 
-	UPROPERTY(EditDefaultsOnly)
+	protected:
+	
 	bool bPersistent = false;
+
 
 	friend UMTWPAudioInterface_WWise;
 	friend UMTWPAudioInstance_WWise;
 };
-
 
 UCLASS(BlueprintType, Blueprintable)
 class MTWP_API UMTWPAudioInstance_WWise : public UMTWPAudioInstance
@@ -60,6 +61,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	EAkCurveInterpolation CurveInterpolation = EAkCurveInterpolation::Linear;
 
+
 // protected:
 public:
 
@@ -71,9 +73,25 @@ public:
 
 protected:
 
+	bool bPersistent = false;
+
+	FDelegateHandle OnWorldCleanupHandle;
+
+protected:
+
 	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric) override;
 
 	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString) override;
+
+protected:
+	
+	void SetupParams(const UMTWPAudioEntity_WWise& InEntityChecked);
+
+	UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D() const;
+
+protected:
+
+	virtual void BeginDestroy() override;
 
 protected:
 
@@ -150,8 +168,4 @@ public:
 protected:
 
 	virtual bool IsValidEntity(UMTWPAudioEntity* InEntity) const override;
-
-protected:
-
-	void SetupParams(const UMTWPAudioEntity_WWise& InEntityChecked, UMTWPAudioInstance_WWise& InInstanceChecked);
 };
