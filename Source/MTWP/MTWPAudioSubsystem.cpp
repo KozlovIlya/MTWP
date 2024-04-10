@@ -1,7 +1,5 @@
 #include "MTWPAudioSubsystem.h"
 
-#include "MTWPAudioInterface_WWise.h"
-
 
 
 //template<typename T>
@@ -370,10 +368,91 @@ bool UMTWPAudioInstance::GetPreviousParameterValueBoolean(const FName& Name) con
      }
  }
 
-void UMTWPAudioSubsystem::Initialize(FSubsystemCollectionBase& Collection)
-{
-   Super::Initialize(Collection);
+ UMTWPAudioInstance* UMTWPAudioSubsystem::CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent)
+ {
+     if (UNLIKELY(!!!IsValid(InEntity)))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("No entity found."));
+         return nullptr;
+     };
 
-   // TODO: Should be initialized from config and added to array
-   WWiseAudioInterface = NewObject<UMTWPAudioInterface_WWise>(this, UMTWPAudioInterface_WWise::StaticClass(), TEXT("WWiseAudioInterface"));
+     auto AudioInterface = GetAudioInterface(InEntity);
+
+     if (UNLIKELY(!!!AudioInterface))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("No suitable audio interface found for entity %s."), *InEntity->GetName());
+         return nullptr;
+     }
+
+     return AudioInterface->CreateAudioInstance2D(InEntity, bInPersistent);
 }
+
+ UMTWPAudioInstance* UMTWPAudioSubsystem::CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation)
+ {
+     if (UNLIKELY(!!!IsValid(InEntity)))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("No entity found."));
+         return nullptr;
+     };
+
+     auto AudioInterface = GetAudioInterface(InEntity);
+
+     if (UNLIKELY(!!!AudioInterface))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("No suitable audio interface found for entity %s."), *InEntity->GetName());
+         return nullptr;
+     }
+
+     return AudioInterface->CreateAudioInstanceAtLocation(InEntity, Location, Orientation);
+
+}
+
+ UMTWPAudioInstance* UMTWPAudioSubsystem::CreateAudioInstanceAttached(UMTWPAudioEntity* InEntity, USceneComponent* AttachComponent, FName AttachPointName, const FVector& Location, const FRotator& Orientation, const EAttachmentRule& InAttachmentRule)
+ {
+     if (UNLIKELY(!!!IsValid(InEntity)))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("No entity found."));
+         return nullptr;
+     };
+
+     auto AudioInterface = GetAudioInterface(InEntity);
+
+     if (UNLIKELY(!!!AudioInterface))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("No suitable audio interface found for entity %s."), *InEntity->GetName());
+         return nullptr;
+     }
+     
+     return AudioInterface->CreateAudioInstanceAttached(InEntity, AttachComponent, AttachPointName, Location, Orientation, InAttachmentRule);
+ }
+
+ UMTWPAudioInterface* UMTWPAudioEntity::CreateAudioInterface() const
+ {
+     return NewObject<UMTWPAudioInterface>();
+ }
+
+ UMTWPAudioInterface* UMTWPAudioSubsystem::GetAudioInterface(const UMTWPAudioEntity* Entity)
+ {
+     if (UNLIKELY(!!!IsValid(Entity->StaticClass())))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("Entity class is not valid."));
+         return nullptr;
+     }
+
+     auto AudioEntityClassName = FName(Entity->StaticClass()->GetName());
+     auto AudioInterfaceIdxPtr = AudioInterfaceIndexMap.Find(FName(AudioEntityClassName));
+     int AudioInterfaceIdx = AudioInterfaceIdxPtr ? *AudioInterfaceIdxPtr : -1;
+     if (!!!AudioInterfaceIdxPtr)
+     {
+         AudioInterfaceIdx = AudioInterfaces.Add(Entity->CreateAudioInterface());
+         AudioInterfaceIndexMap.Add(FName(AudioEntityClassName), AudioInterfaceIdx);
+     }
+
+     if (UNLIKELY(AudioInterfaceIdx < 0))
+     {
+         UE_LOG(LogTemp, Warning, TEXT("Failed to get audio interface."));
+         return nullptr;
+     }
+
+     return AudioInterfaces[AudioInterfaceIdx];
+ }

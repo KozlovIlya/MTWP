@@ -51,18 +51,20 @@ void AMTWPProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UP
 
 	if (auto GI = GetGameInstance(); IsValid(GI))
 	{
-		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS) && IsValid(AS->WWiseAudioInterface))
+		FVector RelativeVelocity = OtherActor->GetVelocity() - this->GetVelocity();
+		float HitPower = 0.00002f * FMath::Pow(RelativeVelocity.Size(), 2);
+
+		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS) && HitPower > 1.f)
 		{
-			//auto AI = AS->WWiseAudioInterface->CreateAudioInstanceAtLocation(AudioEntity, HitComp->GetComponentLocation());
-			auto AI = AS->WWiseAudioInterface->CreateAudioInstance2D(AudioEntity);
-		    //auto AI = AS->WWiseAudioInterface->CreateAudioInstanceAttached(AudioEntity, HitComp);
+			auto AI = AS->CreateAudioInstanceAtLocation(AudioEntity, HitComp->GetComponentLocation());
+			//auto AI = AS->CreateAudioInstance2D(AudioEntity);
+		    //auto AI = AS->CreateAudioInstanceAttached(AudioEntity, HitComp);
 			if (IsValid(AI))
 			{
 				if (IsValid(OtherActor))
 				{
-					FVector RelativeVelocity = OtherActor->GetVelocity() - this->GetVelocity();
-					float HitPower = 0.000002f * FMath::Pow(RelativeVelocity.Size(), 2);
 					AI->SetParameterValueNumeric("HitPower", HitPower);
+					GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, FString::Printf(TEXT("HitPower: %f"), HitPower));
 				}
 
 				if (auto Material = Hit.Component->GetMaterial(0); IsValid(Material))

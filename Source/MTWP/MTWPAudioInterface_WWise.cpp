@@ -84,7 +84,7 @@ void UMTWPAudioInstance_WWise::Stop()
 
 bool UMTWPAudioInstance_WWise::UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* Parameter)
 {
-	auto RTPCParam = Cast<UMTWParameterPRTPC_WWise>(Parameter);
+	auto RTPCParam = Cast<UMTWParameterRTPC_WWise>(Parameter);
 	if (!!!IsValid(RTPCParam) || !!!IsValid(RTPCParam->RtpcObject) || !!!FAkAudioDevice::Get())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInstance_WWise::UpdateRTPC: RTPCParam or RTPCObject is not valid"));
@@ -225,12 +225,11 @@ void UMTWPAudioInstance_WWise::SetupParams(const UMTWPAudioEntity_WWise& InEntit
 					}
 					Instance->Component = nullptr;
 				}
-				
 			}
 		});
 }
 
-UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D() const
+UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D()
 {
 	// TODO: Need to contain 2D-sound listner somewhere.
 	//AudioInstance->Component = NewObject<UMTWPAudioComponent_WWise>(*FAkAudioDevice::Get()->GetDefaultListeners().begin());
@@ -255,6 +254,7 @@ UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D() const
 	NewComponent->SetAutoDestroy(false);
 
 	NewComponent->bPersistent = bPersistent;
+	NewComponent->OnAudioFinished.BindUObject(this, &UMTWPAudioInstance_WWise::OnAudioFinished);
 
 	return NewComponent;
 }
@@ -262,7 +262,20 @@ UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D() const
 void UMTWPAudioInstance_WWise::BeginDestroy()
 {
 	FWorldDelegates::OnWorldCleanup.Remove(OnWorldCleanupHandle);
+	if (Component)
+	{
+		Component->OnAudioFinished.Unbind();
+	}
 	Super::BeginDestroy();
+}
+
+void UMTWPAudioInstance_WWise::OnAudioFinished()
+{
+    if (PlayingStatus == EMTWPPlayingStatus::Playing)
+    {
+        PlayingStatus = EMTWPPlayingStatus::Init;
+		PlayingID = AK_INVALID_PLAYING_ID;
+    }
 }
 
 
@@ -275,9 +288,9 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstance2D(UMTWPAudioE
 	//}
 
 
-	if (UNLIKELY(!!!GetWorld() || !!!FAkAudioDevice::Get()))
+	if (UNLIKELY(!!!FAkAudioDevice::Get()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: World or FAkAudioDevice is not valid"));
+		UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: FAkAudioDevice is not valid"));
 		return nullptr;
 	}
 
@@ -320,12 +333,6 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstanceAtLocation(UMT
         return nullptr;
 	}
 
-	if (UNLIKELY(!!!GetWorld()))
-    {
-        UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstanceAtLocation: World is not valid"));
-        return nullptr;
-    }
-
 	if (UNLIKELY(!!!IsValid(*FAkAudioDevice::Get()->GetDefaultListeners().begin())))
 	{
         UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstanceAtLocation: AudioComponent is not valid"));
@@ -351,7 +358,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstanceAttached(UMTWP
 	//}
 
 
-	if (UNLIKELY(!!!GetWorld() || !!!FAkAudioDevice::Get()))
+	if (UNLIKELY(!!!FAkAudioDevice::Get()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: World or FAkAudioDevice is not valid"));
 		return nullptr;
@@ -394,7 +401,13 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstanceAttached(UMTWP
 		return nullptr;
 	}
 
-	AudioInstance->Component->RegisterComponentWithWorld(GetWorld());
+	if (UNLIKELY(!!!IsValid(AttachComponent->GetWorld())))
+    {
+        UE_LOG(LogTemp, Warning, TEXT("MTWPAudioInterface_WWise::CreateAudioInstance2D: World is not valid"));
+        return nullptr;
+    }
+
+	AudioInstance->Component->RegisterComponentWithWorld(AttachComponent->GetWorld());
 	auto& ComponentTransform = FAttachmentTransformRules::SnapToTargetNotIncludingScale;
 	if (InAttachmentRule == EAttachmentRule::KeepRelative)
     {
@@ -417,7 +430,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstanceAttached(UMTWP
 	}
 
 	// TODO:
-	// Reverb and everything setup
+	// Reverb setup
 	// Look into AkAudioEvent::PostAkEventAtLocation
 	//AkSoundPosition SoundPosition;
 	//FQuat OrientationQuat(Orientation);
@@ -426,6 +439,7 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstanceAttached(UMTWP
 
 	AudioInstance->Component->SetAutoDestroy(false);
 	AudioInstance->Component->OcclusionCollisionChannel = TEnumAsByte(EAkCollisionChannel::EAKCC_WorldDynamic);
+	AudioInstance->Component->OnAudioFinished.BindUObject(AudioInstance, &UMTWPAudioInstance_WWise::OnAudioFinished);
 
 	AudioInstance->SetupParams(*InEntity_WWise);
 
@@ -434,5 +448,24 @@ UMTWPAudioInstance* UMTWPAudioInterface_WWise::CreateAudioInstanceAttached(UMTWP
 
 bool UMTWPAudioInterface_WWise::IsValidEntity(UMTWPAudioEntity* InEntity) const
 {
-	return false;
+	// TODO: Add validation
+	return true;
+}
+
+
+UMTWPAudioInterface* UMTWPAudioEntity_WWise::CreateAudioInterface() const
+{
+	return NewObject<UMTWPAudioInterface_WWise>();
+}
+
+void UMTWPAudioComponent_WWise::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	auto InstanceOwner = Cast<UMTWPAudioInstance>(GetOuter());
+	if (LIKELY(IsValid(InstanceOwner)))
+	{
+		if (!!!HasActiveEvents() && InstanceOwner->GetPlayingStatus() == EMTWPPlayingStatus::Playing)
+		{
+			OnAudioFinished.ExecuteIfBound();
+		}
+	}
 }

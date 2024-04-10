@@ -400,7 +400,10 @@ class MTWP_API UMTWPAudioEntity : public UObject
 {
     GENERATED_BODY()
 
+	virtual UMTWPAudioInterface* CreateAudioInterface() const;
+
 	friend UMTWPAudioInstance;
+	friend UMTWPAudioSubsystem;
 };
 
 
@@ -413,7 +416,7 @@ class MTWP_API UMTWPAudioInterface : public UObject
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
-	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false) { return nullptr; };
+	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false) { return nullptr; }
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
 	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) { return nullptr; }
@@ -425,7 +428,6 @@ protected:
 
 	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
 	virtual bool IsValidEntity(UMTWPAudioEntity* InEntity) const { return true; }
-
 };
 
 
@@ -435,11 +437,25 @@ class MTWP_API UMTWPAudioSubsystem : public UGameInstanceSubsystem
 {
 	GENERATED_BODY()
 
-	virtual void Initialize(FSubsystemCollectionBase& Collection);
-
 public:
 
-	// TODO: Should be contained in array
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false);
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit));
+
+	UFUNCTION(BlueprintCallable, Category = "AudioInterface")
+	UMTWPAudioInstance* CreateAudioInstanceAttached(UMTWPAudioEntity* InEntity, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), const EAttachmentRule& InAttachmentRule = EAttachmentRule::KeepRelative);
+
+protected:
+
 	UPROPERTY()
-	class UMTWPAudioInterface_WWise* WWiseAudioInterface;
+	TArray<TObjectPtr<UMTWPAudioInterface>> AudioInterfaces;
+
+	UPROPERTY()
+	TMap<FName, int> AudioInterfaceIndexMap;
+
+private:
+	UMTWPAudioInterface* UMTWPAudioSubsystem::GetAudioInterface(const UMTWPAudioEntity* Entity);
 };

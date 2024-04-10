@@ -20,11 +20,11 @@ void AMTWPGameMode::BeginPlay()
 {
 	if (auto GI = GetGameInstance<UMTWPGameInstance>(); IsValid(GI))
 	{
-		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS) && IsValid(AS->WWiseAudioInterface))
+		if (auto AS = GI->GetSubsystem<UMTWPAudioSubsystem>(); IsValid(AS))
 		{
 			if (!!!IsValid(GI->AmbientAudioInstance))
 			{
-				GI->AmbientAudioInstance = AS->WWiseAudioInterface->CreateAudioInstance2D(GI->AmbientAudioEntity, true);
+				GI->AmbientAudioInstance = AS->CreateAudioInstance2D(GI->AmbientAudioEntity, true);
 			}
 			GI->AmbientAudioInstance->SetParameterValueString("Character", FMath::RandBool() ? "Nervous" : "Calm");
 			GI->AmbientAudioInstance->Play();

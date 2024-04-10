@@ -15,20 +15,27 @@ class MTWP_API UMTWPAudioComponent_WWise : public UAkComponent
 {
 	GENERATED_BODY()
 
+	DECLARE_DELEGATE(FOnAudioFinished);
+
 	inline virtual void OnUnregister() override
 	{
 		if (!!!bPersistent)
 		{
 			Stop();
+			
         }
 
 		USceneComponent::OnUnregister();
 	}
 
+	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 	protected:
 	
 	bool bPersistent = false;
 
+	FOnAudioFinished OnAudioFinished;
 
 	friend UMTWPAudioInterface_WWise;
 	friend UMTWPAudioInstance_WWise;
@@ -48,7 +55,7 @@ public:
 
 	virtual void Stop() override;
 
-	//virtual void Pause() = 0;
+	//virtual void Pause() override;
 
 protected:
 
@@ -87,7 +94,7 @@ protected:
 	
 	void SetupParams(const UMTWPAudioEntity_WWise& InEntityChecked);
 
-	UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D() const;
+	UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D();
 
 protected:
 
@@ -95,11 +102,17 @@ protected:
 
 protected:
 
+	// This calls only for AudioComponents so
+	// TODO: Add persistent support for AudioInstances
+	void OnAudioFinished();
+
+protected:
+
 	friend UMTWPAudioInterface_WWise;
 };
 
 UCLASS(BlueprintType, Blueprintable)
-class MTWP_API UMTWParameterPRTPC_WWise : public UMTWPPlaybackParameterNumeric
+class MTWP_API UMTWParameterRTPC_WWise : public UMTWPPlaybackParameterNumeric
 {
 	GENERATED_BODY()
 	
@@ -123,6 +136,8 @@ class MTWP_API UMTWParameterSwitchGroup_WWise : public UMTWPPlaybackParameterStr
 	friend UMTWPAudioInstance_WWise;
 };
 
+// TODO: Add WWise States support
+
 UCLASS(BlueprintType, Blueprintable, EditInlineNew)
 class MTWP_API UMTWPAudioEntity_WWise : public UMTWPAudioEntity
 {
@@ -143,10 +158,15 @@ public:
 protected:
 
 	UPROPERTY(EditDefaultsOnly, Instanced)
-	TArray<UMTWParameterPRTPC_WWise*> RTPCs;
+	TArray<UMTWParameterRTPC_WWise*> RTPCs;
 	
 	UPROPERTY(EditDefaultsOnly, Instanced)
 	TArray<UMTWParameterSwitchGroup_WWise*> Switches;
+
+protected:
+
+	virtual UMTWPAudioInterface* CreateAudioInterface() const override;
+
 
 	friend UMTWPAudioInterface_WWise;
 	friend UMTWPAudioInstance_WWise;
