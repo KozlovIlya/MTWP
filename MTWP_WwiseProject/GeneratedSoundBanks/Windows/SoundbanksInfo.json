@@ -18,7 +18,7 @@
     "Type": "User",
     "GUID": "{C44318BD-AD38-4662-9D55-EBF8383578B9}",
     "Language": "SFX",
-    "Hash": "{A640DBA8-82EC-590C-EB2C-DFDB2BA02BB5}",
+    "Hash": "{17D1BEAB-1FC9-061E-90B2-01C186651F93}",
     "ObjectPath": "\\SoundBanks\\Default Work Unit\\Default",
     "ShortName": "Default",
     "Path": "Default.bnk",
@@ -40,14 +40,120 @@
       "CachePath": "SFX/projectilehit_metal_10C4C929.wem"
      }
     ],
+    "Plugins": {
+     "Custom": [
+      {
+       "Id": "610884552",
+       "Name": "Tremolo (Custom)",
+       "ObjectPath": "\\Actor-Mixer Hierarchy\\Default Work Unit\\AmbientCharacterSwitch\\ambient_nervous\\Tremolo (Custom)",
+       "GUID": "{71DAFCE5-677E-4EE1-A513-90728BF871DA}",
+       "LibName": "Wwise Tremolo",
+       "LibId": "8585219"
+      },
+      {
+       "Id": "641370251",
+       "Name": "Compressor (Custom)",
+       "ObjectPath": "\\Actor-Mixer Hierarchy\\Default Work Unit\\AmbientCharacterSwitch\\ambient_nervous\\Compressor (Custom)",
+       "GUID": "{0F9CA5AE-4E12-4662-9BD2-0B8BC1011C07}",
+       "LibName": "Wwise Compressor",
+       "LibId": "7077891"
+      },
+      {
+       "Id": "749359177",
+       "Name": "RoomVerb (Custom)",
+       "ObjectPath": "\\Actor-Mixer Hierarchy\\Default Work Unit\\AmbientCharacterSwitch\\ambient_nervous\\RoomVerb (Custom)",
+       "GUID": "{94E36BB3-6C46-4190-82BF-FC83EC8C8F5A}",
+       "LibName": "Wwise RoomVerb",
+       "LibId": "7733251"
+      },
+      {
+       "Id": "838625008",
+       "Name": "Low white noise",
+       "ObjectPath": "\\Actor-Mixer Hierarchy\\Default Work Unit\\AmbientCharacterSwitch\\ambient_calm\\Low white noise",
+       "GUID": "{47CE24E3-1D5B-4B76-88F9-5583969D413B}",
+       "LibName": "Wwise Tone Generator",
+       "LibId": "6684674"
+      },
+      {
+       "Id": "892661683",
+       "Name": "Guitar Distortion (Custom)",
+       "ObjectPath": "\\Actor-Mixer Hierarchy\\Default Work Unit\\AmbientCharacterSwitch\\ambient_nervous\\Guitar Distortion (Custom)",
+       "GUID": "{6FCF04AC-82A5-492F-84CF-F4898C0871FA}",
+       "LibName": "Wwise Guitar Distortion",
+       "LibId": "8257539"
+      },
+      {
+       "Id": "1063353769",
+       "Name": "Synth One",
+       "ObjectPath": "\\Actor-Mixer Hierarchy\\Default Work Unit\\AmbientCharacterSwitch\\ambient_nervous\\Synth One",
+       "GUID": "{71A54E84-72EA-47E5-8CA4-77A9B455ACD4}",
+       "LibName": "Wwise Synth One",
+       "LibId": "9699330"
+      }
+     ]
+    },
     "Events": [
+     {
+      "Id": "1562304622",
+      "Name": "Play_Ambient",
+      "ObjectPath": "\\Events\\Default Work Unit\\Play_Ambient",
+      "GUID": "{D25EF857-86B3-48FB-A138-EF534B48CAB9}",
+      "DurationType": "Infinite",
+      "SwitchContainers": [
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "436743010",
+         "Id": "3753286132",
+         "GUID": "{29DDF475-7233-45C3-B72D-1CC78AA22066}",
+         "Default": "true"
+        },
+        "PluginRefs": {
+         "Custom": [
+          {
+           "Id": "610884552"
+          },
+          {
+           "Id": "641370251"
+          },
+          {
+           "Id": "749359177"
+          },
+          {
+           "Id": "892661683"
+          },
+          {
+           "Id": "1063353769"
+          }
+         ]
+        }
+       },
+       {
+        "SwitchValue": {
+         "GroupType": "Switch",
+         "GroupId": "436743010",
+         "Id": "1717373301",
+         "GUID": "{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"
+        },
+        "PluginRefs": {
+         "Custom": [
+          {
+           "Id": "838625008"
+          }
+         ]
+        }
+       }
+      ]
+     },
      {
       "Id": "2960666077",
       "Name": "Play_Hit",
       "ObjectPath": "\\Events\\Default Work Unit\\Play_Hit",
       "GUID": "{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}",
       "MaxAttenuation": "100",
-      "DurationType": "Infinite",
+      "DurationType": "OneShot",
+      "DurationMin": "0.7809466",
+      "DurationMax": "1.9485873",
       "SwitchContainers": [
        {
         "SwitchValue": {
@@ -89,6 +195,26 @@
     ],
     "SwitchGroups": [
      {
+      "Id": "436743010",
+      "Name": "Character",
+      "ObjectPath": "\\Switches\\Default Work Unit\\Character",
+      "GUID": "{266BE4A3-DE73-4BD7-9A11-5DC4B6E2D3D8}",
+      "Switches": [
+       {
+        "Id": "1717373301",
+        "Name": "Nervous",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Character\\Nervous",
+        "GUID": "{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"
+       },
+       {
+        "Id": "3753286132",
+        "Name": "Calm",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Character\\Calm",
+        "GUID": "{29DDF475-7233-45C3-B72D-1CC78AA22066}"
+       }
+      ]
+     },
+     {
       "Id": "1834394558",
       "Name": "Surface",
       "ObjectPath": "\\Switches\\Default Work Unit\\Surface",
@@ -115,7 +241,7 @@
     "Type": "User",
     "GUID": "{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}",
     "Language": "SFX",
-    "Hash": "{C198A303-1712-AFDD-7C28-77FCAF4D3A99}",
+    "Hash": "{6CD23EC1-59C9-59C5-83BB-4F956C33164E}",
     "ObjectPath": "Init",
     "ShortName": "Init",
     "Path": "Init.bnk",
@@ -157,6 +283,26 @@
     ],
     "SwitchGroups": [
      {
+      "Id": "436743010",
+      "Name": "Character",
+      "ObjectPath": "\\Switches\\Default Work Unit\\Character",
+      "GUID": "{266BE4A3-DE73-4BD7-9A11-5DC4B6E2D3D8}",
+      "Switches": [
+       {
+        "Id": "1717373301",
+        "Name": "Nervous",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Character\\Nervous",
+        "GUID": "{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"
+       },
+       {
+        "Id": "3753286132",
+        "Name": "Calm",
+        "ObjectPath": "\\Switches\\Default Work Unit\\Character\\Calm",
+        "GUID": "{29DDF475-7233-45C3-B72D-1CC78AA22066}"
+       }
+      ]
+     },
+     {
       "Id": "1834394558",
       "Name": "Surface",
       "ObjectPath": "\\Switches\\Default Work Unit\\Surface",
@@ -179,6 +325,6 @@
     ]
    }
   ],
-  "FileHash": "{3CCC5064-1A79-D4D9-0243-D7D521609910}"
+  "FileHash": "{65C62FC9-4998-2011-F21F-64524BB3AF88}"
  }
 }

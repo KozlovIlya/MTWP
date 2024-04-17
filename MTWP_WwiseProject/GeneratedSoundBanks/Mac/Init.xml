@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Mac" BasePlatform="Mac" SchemaVersion="16" SoundBankVersion="145">
 	<SoundBanks>
-		<SoundBank Id="1355168291" Type="User" GUID="{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}" Language="SFX" Hash="{8532C273-6622-2C4B-F688-7E26005BEC33}">
+		<SoundBank Id="1355168291" Type="User" GUID="{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}" Language="SFX" Hash="{CF91E30F-0000-D67D-8216-4C66B9EABC55}">
 			<ObjectPath>Init</ObjectPath>
 			<ShortName>Init</ShortName>
 			<Path>Init.bnk</Path>
@@ -18,6 +18,12 @@
 				<GameParameter Id="2726366691" Name="HitPower" ObjectPath="\Game Parameters\Default Work Unit\HitPower" GUID="{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"/>
 			</GameParameters>
 			<SwitchGroups>
+				<SwitchGroup Id="436743010" Name="Character" ObjectPath="\Switches\Default Work Unit\Character" GUID="{266BE4A3-DE73-4BD7-9A11-5DC4B6E2D3D8}">
+					<Switches>
+						<Switch Id="1717373301" Name="Nervous" ObjectPath="\Switches\Default Work Unit\Character\Nervous" GUID="{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"/>
+						<Switch Id="3753286132" Name="Calm" ObjectPath="\Switches\Default Work Unit\Character\Calm" GUID="{29DDF475-7233-45C3-B72D-1CC78AA22066}"/>
+					</Switches>
+				</SwitchGroup>
 				<SwitchGroup Id="1834394558" Name="Surface" ObjectPath="\Switches\Default Work Unit\Surface" GUID="{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}">
 					<Switches>
 						<Switch Id="660835419" Name="Plastic" ObjectPath="\Switches\Default Work Unit\Surface\Plastic" GUID="{15032001-A763-4701-8C91-0E226BD71ECE}"/>
@@ -27,5 +33,5 @@
 			</SwitchGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{22447839-7469-96A8-3D24-F1BCFC0A8E80}</FileHash>
+	<FileHash>{FB4F2239-246D-C33C-0A5F-9AB67B0099E9}</FileHash>
 </SoundBanksInfo>

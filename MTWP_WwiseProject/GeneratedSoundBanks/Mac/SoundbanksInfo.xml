@@ -9,7 +9,7 @@
 	</RootPaths>
 	<DialogueEvents/>
 	<SoundBanks>
-		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{A640DBA8-82EC-590C-EB2C-DFDB2BA02BB5}">
+		<SoundBank Id="782826392" Type="User" GUID="{C44318BD-AD38-4662-9D55-EBF8383578B9}" Language="SFX" Hash="{17D1BEAB-1FC9-061E-90B2-01C186651F93}">
 			<ObjectPath>\SoundBanks\Default Work Unit\Default</ObjectPath>
 			<ShortName>Default</ShortName>
 			<Path>Default.bnk</Path>
@@ -23,8 +23,42 @@
 					<CachePath>SFX/projectilehit_metal_10C4C929.wem</CachePath>
 				</File>
 			</Media>
+			<Plugins>
+				<Custom>
+					<Plugin Id="610884552" Name="Tremolo (Custom)" ObjectPath="\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_nervous\Tremolo (Custom)" GUID="{71DAFCE5-677E-4EE1-A513-90728BF871DA}" LibName="Wwise Tremolo" LibId="8585219"/>
+					<Plugin Id="641370251" Name="Compressor (Custom)" ObjectPath="\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_nervous\Compressor (Custom)" GUID="{0F9CA5AE-4E12-4662-9BD2-0B8BC1011C07}" LibName="Wwise Compressor" LibId="7077891"/>
+					<Plugin Id="749359177" Name="RoomVerb (Custom)" ObjectPath="\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_nervous\RoomVerb (Custom)" GUID="{94E36BB3-6C46-4190-82BF-FC83EC8C8F5A}" LibName="Wwise RoomVerb" LibId="7733251"/>
+					<Plugin Id="838625008" Name="Low white noise" ObjectPath="\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_calm\Low white noise" GUID="{47CE24E3-1D5B-4B76-88F9-5583969D413B}" LibName="Wwise Tone Generator" LibId="6684674"/>
+					<Plugin Id="892661683" Name="Guitar Distortion (Custom)" ObjectPath="\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_nervous\Guitar Distortion (Custom)" GUID="{6FCF04AC-82A5-492F-84CF-F4898C0871FA}" LibName="Wwise Guitar Distortion" LibId="8257539"/>
+					<Plugin Id="1063353769" Name="Synth One" ObjectPath="\Actor-Mixer Hierarchy\Default Work Unit\AmbientCharacterSwitch\ambient_nervous\Synth One" GUID="{71A54E84-72EA-47E5-8CA4-77A9B455ACD4}" LibName="Wwise Synth One" LibId="9699330"/>
+				</Custom>
+			</Plugins>
 			<Events>
-				<Event Id="2960666077" Name="Play_Hit" ObjectPath="\Events\Default Work Unit\Play_Hit" GUID="{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}" MaxAttenuation="100" DurationType="Infinite">
+				<Event Id="1562304622" Name="Play_Ambient" ObjectPath="\Events\Default Work Unit\Play_Ambient" GUID="{D25EF857-86B3-48FB-A138-EF534B48CAB9}" DurationType="Infinite">
+					<SwitchContainers>
+						<SwitchContainer>
+							<SwitchValue GroupType="Switch" GroupId="436743010" Id="3753286132" GUID="{29DDF475-7233-45C3-B72D-1CC78AA22066}" Default="true"/>
+							<PluginRefs>
+								<Custom>
+									<PluginRef Id="610884552"/>
+									<PluginRef Id="641370251"/>
+									<PluginRef Id="749359177"/>
+									<PluginRef Id="892661683"/>
+									<PluginRef Id="1063353769"/>
+								</Custom>
+							</PluginRefs>
+						</SwitchContainer>
+						<SwitchContainer>
+							<SwitchValue GroupType="Switch" GroupId="436743010" Id="1717373301" GUID="{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"/>
+							<PluginRefs>
+								<Custom>
+									<PluginRef Id="838625008"/>
+								</Custom>
+							</PluginRefs>
+						</SwitchContainer>
+					</SwitchContainers>
+				</Event>
+				<Event Id="2960666077" Name="Play_Hit" ObjectPath="\Events\Default Work Unit\Play_Hit" GUID="{C1547D86-5636-49F2-9AA0-6F2DD074BBF1}" MaxAttenuation="100" DurationType="OneShot" DurationMin="0.7809466" DurationMax="1.9485873">
 					<SwitchContainers>
 						<SwitchContainer>
 							<SwitchValue GroupType="Switch" GroupId="1834394558" Id="660835419" GUID="{15032001-A763-4701-8C91-0E226BD71ECE}" Default="true"/>
@@ -45,6 +79,12 @@
 				<GameParameter Id="2726366691" Name="HitPower" ObjectPath="\Game Parameters\Default Work Unit\HitPower" GUID="{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"/>
 			</GameParameters>
 			<SwitchGroups>
+				<SwitchGroup Id="436743010" Name="Character" ObjectPath="\Switches\Default Work Unit\Character" GUID="{266BE4A3-DE73-4BD7-9A11-5DC4B6E2D3D8}">
+					<Switches>
+						<Switch Id="1717373301" Name="Nervous" ObjectPath="\Switches\Default Work Unit\Character\Nervous" GUID="{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"/>
+						<Switch Id="3753286132" Name="Calm" ObjectPath="\Switches\Default Work Unit\Character\Calm" GUID="{29DDF475-7233-45C3-B72D-1CC78AA22066}"/>
+					</Switches>
+				</SwitchGroup>
 				<SwitchGroup Id="1834394558" Name="Surface" ObjectPath="\Switches\Default Work Unit\Surface" GUID="{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}">
 					<Switches>
 						<Switch Id="660835419" Name="Plastic" ObjectPath="\Switches\Default Work Unit\Surface\Plastic" GUID="{15032001-A763-4701-8C91-0E226BD71ECE}"/>
@@ -53,7 +93,7 @@
 				</SwitchGroup>
 			</SwitchGroups>
 		</SoundBank>
-		<SoundBank Id="1355168291" Type="User" GUID="{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}" Language="SFX" Hash="{8532C273-6622-2C4B-F688-7E26005BEC33}">
+		<SoundBank Id="1355168291" Type="User" GUID="{701ECBBD-9C7B-4030-8CDB-749EE5D1C7B9}" Language="SFX" Hash="{CF91E30F-0000-D67D-8216-4C66B9EABC55}">
 			<ObjectPath>Init</ObjectPath>
 			<ShortName>Init</ShortName>
 			<Path>Init.bnk</Path>
@@ -70,6 +110,12 @@
 				<GameParameter Id="2726366691" Name="HitPower" ObjectPath="\Game Parameters\Default Work Unit\HitPower" GUID="{B0FC3C45-E704-49F0-B4EB-F0CFF9ABB278}"/>
 			</GameParameters>
 			<SwitchGroups>
+				<SwitchGroup Id="436743010" Name="Character" ObjectPath="\Switches\Default Work Unit\Character" GUID="{266BE4A3-DE73-4BD7-9A11-5DC4B6E2D3D8}">
+					<Switches>
+						<Switch Id="1717373301" Name="Nervous" ObjectPath="\Switches\Default Work Unit\Character\Nervous" GUID="{2C1DB999-3305-4775-B34C-C91B2DACC8B2}"/>
+						<Switch Id="3753286132" Name="Calm" ObjectPath="\Switches\Default Work Unit\Character\Calm" GUID="{29DDF475-7233-45C3-B72D-1CC78AA22066}"/>
+					</Switches>
+				</SwitchGroup>
 				<SwitchGroup Id="1834394558" Name="Surface" ObjectPath="\Switches\Default Work Unit\Surface" GUID="{7301D40C-7A5A-4F71-94C5-3FF7256D2AED}">
 					<Switches>
 						<Switch Id="660835419" Name="Plastic" ObjectPath="\Switches\Default Work Unit\Surface\Plastic" GUID="{15032001-A763-4701-8C91-0E226BD71ECE}"/>
@@ -79,5 +125,5 @@
 			</SwitchGroups>
 		</SoundBank>
 	</SoundBanks>
-	<FileHash>{9272B383-A0C8-58F8-547C-CA4AEA5840DE}</FileHash>
+	<FileHash>{274BACAF-AF7A-3FA8-52D7-593B0BF60199}</FileHash>
 </SoundBanksInfo>

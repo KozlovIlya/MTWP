@@ -13,6 +13,8 @@ class AMTWPGameMode : public AGameModeBase
 
 public:
 	AMTWPGameMode();
+
+	virtual void BeginPlay() override;
 };
 
 

@@ -28,28 +28,31 @@ class AMTWPProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
-
-// Audio
 public:
 
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	TObjectPtr<UAkAudioEvent> HitSoundEvent;
+	UPROPERTY(EditDefaultsOnly, Instanced, Category = "Projectile | Audio")
+	TObjectPtr<UMTWPAudioEntity> AudioEntity;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	float HitSoundEventCooldownSeconds = .5f;
+	TObjectPtr<UAkSwitchValue> SwitchMetal;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	TObjectPtr<UAkSwitchValue> HitSwitchValueDefault;
+	TObjectPtr<UAkSwitchValue> SwitchPlastic;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	TObjectPtr<UAkSwitchValue> HitSwitchValueMetal;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FString HitSwitchGroupName;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
-	FMTWPRtpcDefenition HitPowerRtpc;
-
+ // Audio
+//public:
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPAudioEventDefinition_WWise AudioEventDefinition;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPAudioPlaybackParamsDefinition_WWise AudioPlaybackParamsDefinition;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPRtpcDefinition_WWise HitSwitchDefinitionDefault;
+//
+//	UPROPERTY(EditDefaultsOnly, Category = "Projectile | Audio")
+//	FMTWPRtpcDefinition_WWise HitSwitchDefinitionMetal;
 
 
 public:

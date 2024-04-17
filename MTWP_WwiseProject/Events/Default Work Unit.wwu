@@ -14,6 +14,17 @@
 						</Action>
 					</ChildrenList>
 				</Event>
+				<Event Name="Play_Ambient" ID="{D25EF857-86B3-48FB-A138-EF534B48CAB9}">
+					<ChildrenList>
+						<Action Name="" ID="{5A8B4A75-6848-4E35-AE1A-73E78E719A9B}" ShortID="455443381">
+							<ReferenceList>
+								<Reference Name="Target">
+									<ObjectRef Name="AmbientCharacterSwitch" ID="{CB33D677-C607-491B-B1DA-5B8D7DE656DC}" WorkUnitID="{B42CDECC-649D-4125-94ED-E4E66E6F69C0}"/>
+								</Reference>
+							</ReferenceList>
+						</Action>
+					</ChildrenList>
+				</Event>
 			</ChildrenList>
 		</WorkUnit>
 	</Events>

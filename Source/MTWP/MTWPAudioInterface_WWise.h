@@ -1,0 +1,191 @@
+#pragma once
+
+#include "CoreMinimal.h"
+
+#include "MTWPAudioSubsystem.h"
+
+#include <AkRtpc.h>
+#include <AkGameplayTypes.h>
+#include <AkComponent.h>
+
+#include "MTWPAudioInterface_WWise.generated.h"
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPAudioComponent_WWise : public UAkComponent
+{
+	GENERATED_BODY()
+
+	DECLARE_DELEGATE(FOnAudioFinished);
+
+	inline virtual void OnUnregister() override
+	{
+		if (!!!bPersistent)
+		{
+			Stop();
+			
+        }
+
+		USceneComponent::OnUnregister();
+	}
+
+	
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
+	protected:
+	
+	bool bPersistent = false;
+
+	FOnAudioFinished OnAudioFinished;
+
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
+};
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWPAudioInstance_WWise : public UMTWPAudioInstance
+{
+	GENERATED_BODY()
+
+public:
+
+	//UFUNCTION(BlueprintCallable, Category = "AudioInstance | WWise")
+	//virtual bool IsValid() const override;
+
+	virtual void Play() override;
+
+	virtual void Stop() override;
+
+	//virtual void Pause() override;
+
+protected:
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkAudioEvent> Event;
+
+	UPROPERTY(EditDefaultsOnly)
+	int TransitionDurationMs = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	EAkCurveInterpolation CurveInterpolation = EAkCurveInterpolation::Linear;
+
+
+// protected:
+public:
+
+	UPROPERTY(EditDefaultsOnly, Category = "AudioInstance | WWise")
+	TObjectPtr<class UMTWPAudioComponent_WWise> Component = nullptr;
+
+	UPROPERTY(BlueprintReadOnly, Category = "AudioInstance | WWise")
+	int PlayingID = 0;
+
+protected:
+
+	bool bPersistent = false;
+
+	FDelegateHandle OnWorldCleanupHandle;
+
+protected:
+
+	virtual bool UpdateParameterNumeric(UMTWPPlaybackParameterNumeric* ParameterNumeric) override;
+
+	virtual bool UpdateParameterString(UMTWPPlaybackParameterString* ParameterString) override;
+
+protected:
+	
+	void SetupParams(const UMTWPAudioEntity_WWise& InEntityChecked);
+
+	UMTWPAudioComponent_WWise* UMTWPAudioInstance_WWise::CreateAkComponent2D();
+
+protected:
+
+	virtual void BeginDestroy() override;
+
+protected:
+
+	// This calls only for AudioComponents so
+	// TODO: Add persistent support for AudioInstances
+	void OnAudioFinished();
+
+protected:
+
+	friend UMTWPAudioInterface_WWise;
+};
+
+UCLASS(BlueprintType, Blueprintable)
+class MTWP_API UMTWParameterRTPC_WWise : public UMTWPPlaybackParameterNumeric
+{
+	GENERATED_BODY()
+	
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkRtpc> RtpcObject = nullptr;
+
+	UPROPERTY(EditDefaultsOnly)
+	int InterpolationTimeMs = 0;
+
+
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
+};
+
+UCLASS(BlueprintType, Blueprintable, EditInlineNew)
+class MTWP_API UMTWParameterSwitchGroup_WWise : public UMTWPPlaybackParameterString
+{
+	GENERATED_BODY()
+
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
+};
+
+// TODO: Add WWise States support
+
+UCLASS(BlueprintType, Blueprintable, EditInlineNew)
+class MTWP_API UMTWPAudioEntity_WWise : public UMTWPAudioEntity
+{
+	GENERATED_BODY()
+	
+//protected:
+public:
+
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<class UAkAudioEvent> Event;
+
+	UPROPERTY(EditDefaultsOnly)
+	int TransitionDurationMs = 0;
+
+	UPROPERTY(EditDefaultsOnly)
+	EAkCurveInterpolation CurveInterpolation = EAkCurveInterpolation::Linear;
+	
+protected:
+
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TArray<UMTWParameterRTPC_WWise*> RTPCs;
+	
+	UPROPERTY(EditDefaultsOnly, Instanced)
+	TArray<UMTWParameterSwitchGroup_WWise*> Switches;
+
+protected:
+
+	virtual UMTWPAudioInterface* CreateAudioInterface() const override;
+
+
+	friend UMTWPAudioInterface_WWise;
+	friend UMTWPAudioInstance_WWise;
+};
+
+UCLASS(Blueprintable, BlueprintType)
+class MTWP_API UMTWPAudioInterface_WWise : public UMTWPAudioInterface
+{
+	GENERATED_BODY()
+
+public:
+
+	virtual UMTWPAudioInstance* CreateAudioInstance2D(UMTWPAudioEntity* InEntity, bool bInPersistent = false) override;
+
+	virtual UMTWPAudioInstance* CreateAudioInstanceAtLocation(UMTWPAudioEntity* InEntity, const FVector& Location, const FRotator& Orientation = FRotator(ForceInit)) override;
+
+	virtual UMTWPAudioInstance* CreateAudioInstanceAttached(UMTWPAudioEntity* InEntity, USceneComponent* AttachComponent, FName AttachPointName = NAME_None, const FVector& Location = FVector(ForceInit), const FRotator& Orientation = FRotator(ForceInit), const EAttachmentRule& InAttachmentRule = EAttachmentRule::KeepRelative) override;
+
+protected:
+
+	virtual bool IsValidEntity(UMTWPAudioEntity* InEntity) const override;
+};
